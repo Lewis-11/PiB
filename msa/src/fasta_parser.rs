@@ -24,7 +24,7 @@ pub(crate) fn read_fasta(file_name: &str) -> Vec<FastaSequence> {
         name: String::new(),
         sequence: String::new(),
     };
-    let file = File::open(file_name).expect("Unable to open file");
+    let file = File::open(file_name).unwrap();
     let reader = BufReader::new(file);
     let mut is_sequence = false;
 
