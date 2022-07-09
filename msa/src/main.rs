@@ -1,3 +1,5 @@
+mod fasta_parser;
+
 use clap::{Parser, Subcommand};
 
 /// Multiple sequence alignment using minimum spanning trees
