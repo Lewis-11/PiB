@@ -1,4 +1,5 @@
 mod fasta_parser;
+mod utils;
 
 use clap::{Parser, Subcommand};
 
@@ -52,6 +53,14 @@ fn main() {
     match &cli.command {
         Commands::Ref { records, submat, maximize } => {
             println!("we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}", records, submat, maximize);
+            let sm = utils::parse_submatrix(submat);
+            for (key, value) in sm.iter() {
+                println!("{}:{:?}", key, value);
+            }
+            let records = fasta_parser::read_fasta(records);
+            for record in records {
+                println!("{}", record);
+            }
         },
         Commands::Mst { records, submat, maximize } => {
             println!("we should process the 'mst' subcommand with parameters: {:?},{:?},{:?}", records, submat, maximize);
