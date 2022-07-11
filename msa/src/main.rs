@@ -1,3 +1,6 @@
+mod fasta;
+mod utils;
+
 use clap::{Parser, Subcommand};
 
 /// Multiple sequence alignment using minimum spanning trees
@@ -11,7 +14,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-
     /// Reference implementation for Gusfield's 2-approximation algorithm
     Ref {
         /// FASTA files
@@ -22,14 +24,13 @@ enum Commands {
         submat: String,
         /// Should we maximize the cost ?
         #[clap(short, long, value_parser, default_value_t = false)]
-        maximize: bool
+        maximize: bool,
     },
 
     /// Gusfield's 2-approximation algorithm using minimum spanning trees
     Mst {
         // Some additional args can be added in the future,
         // specific to this subcommand (e.g. the order we choose).
-
         /// FASTA files
         #[clap(group = "input", value_parser)]
         records: String,
@@ -38,7 +39,7 @@ enum Commands {
         submat: String,
         /// Should we maximize the cost ?
         #[clap(short, long, value_parser, default_value_t = false)]
-        maximize: bool
+        maximize: bool,
     },
 }
 
@@ -48,11 +49,33 @@ fn main() {
     // You can check for the existence of subcommands, and if found use their
     // matches just as you would the top level cmd
     match &cli.command {
-        Commands::Ref { records, submat, maximize } => {
-            println!("we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}", records, submat, maximize);
-        },
-        Commands::Mst { records, submat, maximize } => {
-            println!("we should process the 'mst' subcommand with parameters: {:?},{:?},{:?}", records, submat, maximize);
-        },
+        Commands::Ref {
+            records,
+            submat,
+            maximize,
+        } => {
+            println!(
+                "we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}",
+                records, submat, maximize
+            );
+            let sm = utils::read_submatrix_file(submat);
+            for (key, value) in sm.iter() {
+                println!("{}:{:?}", key, value);
+            }
+            let records = fasta::read_fasta_file(records);
+            for record in records {
+                println!("{}", record);
+            }
+        }
+        Commands::Mst {
+            records,
+            submat,
+            maximize,
+        } => {
+            println!(
+                "we should process the 'mst' subcommand with parameters: {:?},{:?},{:?}",
+                records, submat, maximize
+            );
+        }
     }
 }
