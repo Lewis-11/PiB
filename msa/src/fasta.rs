@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Read;
 
 // Fasta Sequence struct
+#[derive(Debug)]
 pub(crate) struct FastaSequence {
     name: String,
     sequence: String,
@@ -38,7 +39,9 @@ pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
             sequence.sequence += &line;
         }
     }
-    sequences.push(sequence);
+    if sequence.sequence.len() > 0 {
+        sequences.push(sequence);
+    }
     return sequences;
 }
 
@@ -47,7 +50,7 @@ pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
 // - the name of the sequence starting with '>'
 // - the sequence itself
 pub(crate) fn read_fasta_file(file_name: &str) -> Vec<FastaSequence> {
-    let mut file = File::open(file_name).unwrap();
+    let mut file = File::open(file_name).expect("[!] Error parsing fasta file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
     return parse_fasta_string(contents);
