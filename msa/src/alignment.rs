@@ -54,7 +54,28 @@ mod tests {
     #[test]
     fn test_sample_sequences() {
         let singleline_fasta = String::from_str(
-            ">seq1\nacgtgtcaacgt\n>seq2\nacgtcgtagcta\n>seq3\naataat\n>seq4\naagg\n>seq5\ntccagaga\n>seq6\ntcgat\n>seq7\nggcctaaaggcgccggtctttcgtaccccaaaatctcggcattttaagataagtgagtgttgcgttacactagcgatctaccgcgtcttatacttaagcgtatgcccagatctgactaatcgtgcccccggattagacgggcttgatgggaaagaacagctcgtctgtttacgtataaacagaatcgcctgggttcgc\n>seq8\ngggctaaaggttagggtctttcacactaaagagtggtgcgtatcgtggctaatgtaccgcttctggtatcgtggcttacggccagacctacaagtactagacctgagaactaatcttgtcgagccttccattgagggtaatgggagagaacatcgagtcagaagttattcttgtttacgtagaatcgcctgggtccgc"
+            ">seq1\n\
+            acgtgtcaacgt\n\
+            >seq2\n\
+            acgtcgtagcta\n\
+            >seq3\n\
+            aataat\n\
+            >seq4\n\
+            aagg\n\
+            >seq5\n\
+            tccagaga\n\
+            >seq6\n\
+            tcgat\n\
+            >seq7\n\
+            ggcctaaaggcgccggtctttcgtaccccaaaatctcggcattttaaga\
+            taagtgagtgttgcgttacactagcgatctaccgcgtcttatacttaag\
+            cgtatgcccagatctgactaatcgtgcccccggattagacgggcttgat\
+            gggaaagaacagctcgtctgtttacgtataaacagaatcgcctgggttcgc\n\
+            >seq8\n\
+            gggctaaaggttagggtctttcacactaaagagtggtgcgtatcgtggc\
+            taatgtaccgcttctggtatcgtggcttacggccagacctacaagtact\
+            agacctgagaactaatcttgtcgagccttccattgagggtaatgggaga\
+            gaacatcgagtcagaagttattcttgtttacgtagaatcgcctgggtccgc"
         ).unwrap();
         let result = parse_fasta_string(singleline_fasta);
         let seq1 = &result[0];
