@@ -10,7 +10,7 @@ pub(crate) fn parse_submatrix_string(
     // splits the first line removing ',' and store the rest into a vector of characters
     let header = lines
         .next()
-        .unwrap()
+        .expect("[!] Error parsing submatrix: string content is empty")
         .split(',')
         .map(|x| x.trim().to_string().chars().next().unwrap())
         .collect::<Vec<char>>();
@@ -34,7 +34,7 @@ pub(crate) fn parse_submatrix_string(
 // Parse submatrix indicating cost of subtitution for each pair of characters.
 // Returns a hashmap of the form: [char1][char2] -> cost.
 pub(crate) fn read_submatrix_file(filename: &str) -> HashMap<char, HashMap<char, i32>> {
-    let mut file = File::open(filename).unwrap();
+    let mut file = File::open(filename).expect("[!] Error parsing submatrix file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
     contents = contents.trim().to_string();
@@ -48,11 +48,10 @@ mod tests {
     use crate::utils::parse_submatrix_string;
 
     #[test]
+    #[should_panic]
     fn test_empty_submatrix() {
         let empty_submatrix = String::new();
-        let result = parse_submatrix_string(empty_submatrix);
-
-        assert_eq!(0, result.len());
+        parse_submatrix_string(empty_submatrix);
     }
 
     #[test]
