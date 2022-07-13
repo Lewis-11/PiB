@@ -67,7 +67,7 @@ fn main() {
             for record in &records {
                 println!("{}", record);
             }
-            let scomat = alignment::iterative_alignment_cost(&records[0], &records[1], &sm, &5, maximize);
+            let scomat = alignment::iterative_alignment_cost(&records[0], &records[1], &sm, 5, *maximize);
             println!("Cost of aligning: ({}, {}) = {}", &records[0].name, &records[1].name, scomat[records[0].sequence.len()][records[1].sequence.len()]);
         }
         Commands::Mst {
