@@ -1,11 +1,9 @@
 ; descripcion aceptada
 >seq1
-acgtgt
-caacgt
+acgtgtcaacgt
 
 >seq2
-acgtcg
-tagcta
+acgtcgtagcta
 
 >seq3
 TGCATGCTGAAACTTCTCAACCA

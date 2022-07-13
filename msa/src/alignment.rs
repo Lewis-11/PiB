@@ -42,3 +42,40 @@ pub(crate) fn iterative_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequenc
     return score_matrix;
 }
 
+// Tests
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+
+    use crate::fasta::parse_fasta_string;
+    use crate::utils::parse_submatrix_string;
+    use super::iterative_alignment_cost;
+
+    #[test]
+    fn test_sample_sequences() {
+        let singleline_fasta = String::from_str(
+            ">seq1\nacgtgtcaacgt\n>seq2\nacgtcgtagcta\n>seq3\naataat\n>seq4\naagg\n>seq5\ntccagaga\n>seq6\ntcgat\n>seq7\nggcctaaaggcgccggtctttcgtaccccaaaatctcggcattttaagataagtgagtgttgcgttacactagcgatctaccgcgtcttatacttaagcgtatgcccagatctgactaatcgtgcccccggattagacgggcttgatgggaaagaacagctcgtctgtttacgtataaacagaatcgcctgggttcgc\n>seq8\ngggctaaaggttagggtctttcacactaaagagtggtgcgtatcgtggctaatgtaccgcttctggtatcgtggcttacggccagacctacaagtactagacctgagaactaatcttgtcgagccttccattgagggtaatgggagagaacatcgagtcagaagttattcttgtttacgtagaatcgcctgggtccgc"
+        ).unwrap();
+        let result = parse_fasta_string(singleline_fasta);
+        let seq1 = &result[0];
+        let seq2 = &result[1];
+        let seq3 = &result[2];
+        let seq4 = &result[3];
+        let seq5 = &result[4];
+        let seq6 = &result[5];
+        let seq7 = &result[6];
+        let seq8 = &result[7];
+        let submatrix = parse_submatrix_string(String::from_str(
+            "A,C,G,T\n0,5,2,5\n5,0,5,2\n2,5,0,5\n5,2,5,0"
+        ).unwrap());
+        let mut score_matrix = iterative_alignment_cost(seq1, seq2, &submatrix, &5, &false);
+        assert_eq!(score_matrix[seq1.sequence.len()][seq2.sequence.len()], 22);
+        score_matrix = iterative_alignment_cost(seq3, seq4, &submatrix, &5, &false);
+        assert_eq!(score_matrix[seq3.sequence.len()][seq4.sequence.len()], 14);
+        score_matrix = iterative_alignment_cost(seq5, seq6, &submatrix, &5, &false);
+        assert_eq!(score_matrix[seq5.sequence.len()][seq6.sequence.len()], 20);
+        score_matrix = iterative_alignment_cost(seq7, seq8, &submatrix, &5, &false);
+        assert_eq!(score_matrix[seq7.sequence.len()][seq8.sequence.len()], 325);
+    }
+}
+
