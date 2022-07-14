@@ -67,11 +67,18 @@ fn main() {
             for record in &records {
                 println!("{}", record);
             }
-            let scomat = alignment::iterative_pairwise_alignment_cost(&records[0], &records[1], &sm, 5, *maximize);
-            println!("Cost of aligning: ({}, {}) = {}", &records[0].name, &records[1].name, scomat[records[0].sequence.len()][records[1].sequence.len()]);
-            let alignment = alignment::iterative_backtracking(&scomat, &records[0], &records[1], &sm, 5).expect("Could not align");
-            println!("{}", alignment.0.sequence);
-            println!("{}", alignment.1.sequence);
+            let alignment = alignment::pairwise_alignment(
+                &records[0],
+                &records[1],
+                &sm,
+                5,
+                *maximize,
+            ).expect("pairwise alignment failed");
+            println!("Cost of alignment ({}, {}) = {}", alignment.0.name, alignment.1.name, alignment.2);
+            println!("Sequence1: {}", alignment.0.sequence);
+            println!("Sequence2: {}", alignment.1.sequence);
+
+
         }
         Commands::Mst {
             records,

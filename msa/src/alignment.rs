@@ -4,7 +4,12 @@ use crate::fasta::FastaSequence;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
-pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Vec<Vec<i32>> {
+fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
+
+    if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0 {
+        return None;
+    }
+
     let n = seq1.sequence.len() + 1;
     let m = seq2.sequence.len() + 1;
 
@@ -41,10 +46,10 @@ pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &Fas
             }
         }
     }
-    return score_matrix;
+    return Some(score_matrix);
 }
 
-pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
+fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
 
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0  || score_matrix.len() == 0 {
         return None;
@@ -89,6 +94,16 @@ pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaS
     }
     None
 }
+
+pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<(FastaSequence, FastaSequence, i32)> {
+    let score_matrix: Vec<Vec<i32>> = iterative_pairwise_alignment_cost(seq1, seq2, sub_matrix, gap_cost, maximize)?;
+    let (output1, output2) = iterative_backtracking(&score_matrix, seq1, seq2, sub_matrix, gap_cost)?;
+    let score = score_matrix[seq1.sequence.len()][seq2.sequence.len()];
+    return Some((output1, output2, score));
+}
+
+
+
 // Tests
 #[cfg(test)]
 mod tests {
@@ -137,25 +152,25 @@ mod tests {
             "A,C,G,T\n0,5,2,5\n5,0,5,2\n2,5,0,5\n5,2,5,0"
         ).unwrap());
 
-        let mut score_matrix = iterative_pairwise_alignment_cost(seq1, seq2, &sub_matrix, 5, false);
+        let mut score_matrix = iterative_pairwise_alignment_cost(seq1, seq2, &sub_matrix, 5, false).unwrap();
         let mut alignment = iterative_backtracking(&score_matrix, seq1, seq2, &sub_matrix, 5);
         assert_eq!(score_matrix[seq1.sequence.len()][seq2.sequence.len()], 22);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("ACGT-GTCAACGT"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("ACGTCGT-AGCTA"));
 
-        score_matrix = iterative_pairwise_alignment_cost(seq3, seq4, &sub_matrix, 5, false);
+        score_matrix = iterative_pairwise_alignment_cost(seq3, seq4, &sub_matrix, 5, false).unwrap();
         alignment = iterative_backtracking(&score_matrix, seq3, seq4, &sub_matrix, 5);
         assert_eq!(score_matrix[seq3.sequence.len()][seq4.sequence.len()], 14);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("AATAAT"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("AA-GG-"));
 
-        score_matrix = iterative_pairwise_alignment_cost(seq5, seq6, &sub_matrix, 5, false);
+        score_matrix = iterative_pairwise_alignment_cost(seq5, seq6, &sub_matrix, 5, false).unwrap();
         alignment = iterative_backtracking(&score_matrix, seq5, seq6, &sub_matrix, 5);
         assert_eq!(score_matrix[seq5.sequence.len()][seq6.sequence.len()], 20);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("TCCAGAGA"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("T-C-GA-T"));
 
-        score_matrix = iterative_pairwise_alignment_cost(seq7, seq8, &sub_matrix, 5, false);
+        score_matrix = iterative_pairwise_alignment_cost(seq7, seq8, &sub_matrix, 5, false).unwrap();
         alignment = iterative_backtracking(&score_matrix, seq7, seq8, &sub_matrix, 5);
         assert_eq!(score_matrix[seq7.sequence.len()][seq8.sequence.len()], 325);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("GGCCTAAAGGCGCCGGTCTTTCGTACCCCAAAATCTCG-GCATTTTAAGATAAGTG-AGTGTTGCGTTACACTAGCGATCTACCGCGTCTTATACT-TAAGCG-TATGCCC-AGATCTGA-CTAATCGTGCCCCCGGATTAGACGGGCTTGATGGGAAAGAACA--G-CTC-G--TCTGTTTACGTATAAACAGAATCGCCTGGGTTCGC"));
