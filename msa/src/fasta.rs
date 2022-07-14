@@ -4,8 +4,8 @@ use std::io::Read;
 // Fasta Sequence struct
 #[derive(Debug)]
 pub(crate) struct FastaSequence {
-    name: String,
-    sequence: String,
+    pub(crate) name: String,
+    pub(crate) sequence: String,
 }
 // Function for printing the FastaSequence struct
 impl std::fmt::Display for FastaSequence {
@@ -36,7 +36,10 @@ pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
         } else if line.starts_with(';') {
             is_sequence = false;
         } else if is_sequence {
-            sequence.sequence += &line;
+            // first convert the sequence to uppercase
+            let mut line_upper = line.to_string();
+            line_upper.make_ascii_uppercase();
+            sequence.sequence.push_str(&line_upper);
         }
     }
     if sequence.sequence.len() > 0 {
