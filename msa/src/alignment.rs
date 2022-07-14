@@ -93,13 +93,13 @@ pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaS
 #[cfg(test)]
 mod tests {
     use std::str::FromStr;
-
     use crate::fasta::parse_fasta_string;
     use crate::utils::parse_submatrix_string;
     use super::iterative_pairwise_alignment_cost;
+    use super::iterative_backtracking;
 
     #[test]
-    fn test_sample_sequences() {
+    fn test_sample_sequences_alignment() {
         let single_line_fasta = String::from_str(
             ">seq1\n\
             acgtgtcaacgt\n\
@@ -136,14 +136,30 @@ mod tests {
         let sub_matrix = parse_submatrix_string(String::from_str(
             "A,C,G,T\n0,5,2,5\n5,0,5,2\n2,5,0,5\n5,2,5,0"
         ).unwrap());
+
         let mut score_matrix = iterative_pairwise_alignment_cost(seq1, seq2, &sub_matrix, 5, false);
+        let mut alignment = iterative_backtracking(&score_matrix, seq1, seq2, &sub_matrix, 5);
         assert_eq!(score_matrix[seq1.sequence.len()][seq2.sequence.len()], 22);
+        assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("ACGT-GTCAACGT"));
+        assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("ACGTCGT-AGCTA"));
+
         score_matrix = iterative_pairwise_alignment_cost(seq3, seq4, &sub_matrix, 5, false);
+        alignment = iterative_backtracking(&score_matrix, seq3, seq4, &sub_matrix, 5);
         assert_eq!(score_matrix[seq3.sequence.len()][seq4.sequence.len()], 14);
+        assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("AATAAT"));
+        assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("AA-GG-"));
+
         score_matrix = iterative_pairwise_alignment_cost(seq5, seq6, &sub_matrix, 5, false);
+        alignment = iterative_backtracking(&score_matrix, seq5, seq6, &sub_matrix, 5);
         assert_eq!(score_matrix[seq5.sequence.len()][seq6.sequence.len()], 20);
+        assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("TCCAGAGA"));
+        assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("T-C-GA-T"));
+
         score_matrix = iterative_pairwise_alignment_cost(seq7, seq8, &sub_matrix, 5, false);
+        alignment = iterative_backtracking(&score_matrix, seq7, seq8, &sub_matrix, 5);
         assert_eq!(score_matrix[seq7.sequence.len()][seq8.sequence.len()], 325);
+        assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("GGCCTAAAGGCGCCGGTCTTTCGTACCCCAAAATCTCG-GCATTTTAAGATAAGTG-AGTGTTGCGTTACACTAGCGATCTACCGCGTCTTATACT-TAAGCG-TATGCCC-AGATCTGA-CTAATCGTGCCCCCGGATTAGACGGGCTTGATGGGAAAGAACA--G-CTC-G--TCTGTTTACGTATAAACAGAATCGCCTGGGTTCGC"));
+        assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("GGGCTAAAGGTTAGGGTCTTTCACACTAAAGAGTGGTGCGTATCGT-GGCTAA-TGTACCGCTTC-TGGTATC-GTGGCTTA-CG-GCCAGAC-CTACAAGTACTAGACCTGAGAACTAATCTTGTCGAGCCTTC-CATT-GA-GGG--TAATGGGAGAGAACATCGAGTCAGAAGTTATTCTTGTTTACGTAGAATCGCCTGGGTCCGC"));
     }
 }
 
