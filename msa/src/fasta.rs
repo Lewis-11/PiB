@@ -25,25 +25,34 @@ impl FastaSequence {
 
 #[derive(Debug, Clone)]
 pub(crate) struct Alignment {
-    pub(crate) seq1: FastaSequence,
-    pub(crate) seq2: FastaSequence,
+    pub(crate) sequences: Vec<FastaSequence>,
     pub(crate) score: i32,
 }
 // Function for printing the Alignment struct
 impl std::fmt::Display for Alignment {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        return write!(f, "{{\n{}: {}\n{}: {}\nscore: {}\n}}", self.seq1.name, self.seq1.sequence, self.seq2.name, self.seq2.sequence, self.score);
+        for seq in &self.sequences {
+            write!(f, "{}\n", seq.sequence)?;
+        }
+        return write!(f, "score: {}", self.score);
     }
 }
 // Function for creating new Alignment struct
 impl Alignment {
-    pub(crate) fn new(seq1: FastaSequence, seq2: FastaSequence, score: i32) -> Alignment {
+    pub(crate) fn new_pairwise(seq1: FastaSequence, seq2: FastaSequence, score: i32) -> Alignment {
         return Alignment {
-            seq1,
-            seq2,
+            sequences: vec![seq1, seq2],
             score,
         };
     }
+    // Function for creating a new Alignment struct from a vector of FastaSequence structs
+    pub(crate) fn new(sequences: Vec<FastaSequence>, score: i32) -> Alignment {
+        return Alignment {
+            sequences,
+            score,
+        };
+    }
+
 }
 
 pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {

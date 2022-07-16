@@ -75,10 +75,7 @@ fn main() {
                 5,
                 *maximize,
             ).expect("pairwise alignment failed");
-            println!("Cost of alignment ({}, {}) = {}", alignment.seq1.name, alignment.seq2.name, alignment.score);
-            println!("Sequence1: {}", alignment.seq1.sequence);
-            println!("Sequence2: {}", alignment.seq2.sequence);
-
+            println!("{}", alignment);
 
         }
         Commands::Mst {

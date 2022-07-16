@@ -94,7 +94,7 @@ pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub
     let score_matrix: Vec<Vec<i32>> = iterative_pairwise_alignment_cost(seq1, seq2, sub_matrix, gap_cost, maximize)?;
     let (output1, output2) = iterative_backtracking(&score_matrix, seq1, seq2, sub_matrix, gap_cost)?;
     let score = score_matrix[seq1.sequence.len()][seq2.sequence.len()];
-    return Some(Alignment::new(output1, output2, score));
+    return Some(Alignment::new_pairwise(output1, output2, score));
 }
 
 
