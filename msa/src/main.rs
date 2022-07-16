@@ -1,6 +1,7 @@
 mod fasta;
 mod utils;
 mod alignment;
+mod algorithms;
 
 use clap::{Parser, Subcommand};
 
@@ -74,9 +75,9 @@ fn main() {
                 5,
                 *maximize,
             ).expect("pairwise alignment failed");
-            println!("Cost of alignment ({}, {}) = {}", alignment.0.name, alignment.1.name, alignment.2);
-            println!("Sequence1: {}", alignment.0.sequence);
-            println!("Sequence2: {}", alignment.1.sequence);
+            println!("Cost of alignment ({}, {}) = {}", alignment.seq1.name, alignment.seq2.name, alignment.score);
+            println!("Sequence1: {}", alignment.seq1.sequence);
+            println!("Sequence2: {}", alignment.seq2.sequence);
 
 
         }

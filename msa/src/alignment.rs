@@ -1,10 +1,11 @@
 use std::cmp::{max, min};
 use std::collections::HashMap;
 use crate::fasta::FastaSequence;
+use crate::fasta::Alignment;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
-fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
+pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
 
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0 {
         return None;
@@ -49,7 +50,7 @@ fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence,
     return Some(score_matrix);
 }
 
-fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
+pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
 
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0  || score_matrix.len() == 0 {
         return None;
@@ -81,25 +82,19 @@ fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, se
             i-=1;
         }
         if i==0 && j==0 {
-            let output1 = FastaSequence {
-                name: seq1.name.clone(),
-                sequence: alignment1.chars().rev().collect::<String>(),
-            };
-            let output2 = FastaSequence {
-                name: seq2.name.clone(),
-                sequence: alignment2.chars().rev().collect::<String>(),
-            };
+            let output1 = FastaSequence::new(seq1.name.clone(), alignment1.chars().rev().collect::<String>());
+            let output2 = FastaSequence::new(seq2.name.clone(), alignment2.chars().rev().collect::<String>());
             return Some((output1, output2));
         }
     }
     None
 }
 
-pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<(FastaSequence, FastaSequence, i32)> {
+pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
     let score_matrix: Vec<Vec<i32>> = iterative_pairwise_alignment_cost(seq1, seq2, sub_matrix, gap_cost, maximize)?;
     let (output1, output2) = iterative_backtracking(&score_matrix, seq1, seq2, sub_matrix, gap_cost)?;
     let score = score_matrix[seq1.sequence.len()][seq2.sequence.len()];
-    return Some((output1, output2, score));
+    return Some(Alignment::new(output1, output2, score));
 }
 
 
