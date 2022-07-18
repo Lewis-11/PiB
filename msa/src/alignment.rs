@@ -157,6 +157,9 @@ mod tests {
         assert_eq!(score_matrix[seq1.sequence.len()][seq2.sequence.len()], 22);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("ACGT-GTCAACGT"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("ACGTCGT-AGCTA"));
+        
+        score_matrix = iterative_pairwise_alignment_cost(seq2, seq1, &sub_matrix, 5, false).unwrap();
+        assert_eq!(score_matrix[seq2.sequence.len()][seq1.sequence.len()], 22);
 
         score_matrix = iterative_pairwise_alignment_cost(seq3, seq4, &sub_matrix, 5, false).unwrap();
         alignment = iterative_backtracking(&score_matrix, seq3, seq4, &sub_matrix, 5);
@@ -164,17 +167,26 @@ mod tests {
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("AATAAT"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("AA-GG-"));
 
+        score_matrix = iterative_pairwise_alignment_cost(seq4, seq3, &sub_matrix, 5, false).unwrap();
+        assert_eq!(score_matrix[seq4.sequence.len()][seq3.sequence.len()], 14);
+
         score_matrix = iterative_pairwise_alignment_cost(seq5, seq6, &sub_matrix, 5, false).unwrap();
         alignment = iterative_backtracking(&score_matrix, seq5, seq6, &sub_matrix, 5);
         assert_eq!(score_matrix[seq5.sequence.len()][seq6.sequence.len()], 20);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("TCCAGAGA"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("T-C-GA-T"));
 
+        score_matrix = iterative_pairwise_alignment_cost(seq6, seq5, &sub_matrix, 5, false).unwrap();
+        assert_eq!(score_matrix[seq6.sequence.len()][seq5.sequence.len()], 20);
+
         score_matrix = iterative_pairwise_alignment_cost(seq7, seq8, &sub_matrix, 5, false).unwrap();
         alignment = iterative_backtracking(&score_matrix, seq7, seq8, &sub_matrix, 5);
         assert_eq!(score_matrix[seq7.sequence.len()][seq8.sequence.len()], 325);
         assert_eq!(alignment.as_ref().unwrap().0.sequence, String::from("GGCCTAAAGGCGCCGGTCTTTCGTACCCCAAAATCTCG-GCATTTTAAGATAAGTG-AGTGTTGCGTTACACTAGCGATCTACCGCGTCTTATACT-TAAGCG-TATGCCC-AGATCTGA-CTAATCGTGCCCCCGGATTAGACGGGCTTGATGGGAAAGAACA--G-CTC-G--TCTGTTTACGTATAAACAGAATCGCCTGGGTTCGC"));
         assert_eq!(alignment.as_ref().unwrap().1.sequence, String::from("GGGCTAAAGGTTAGGGTCTTTCACACTAAAGAGTGGTGCGTATCGT-GGCTAA-TGTACCGCTTC-TGGTATC-GTGGCTTA-CG-GCCAGAC-CTACAAGTACTAGACCTGAGAACTAATCTTGTCGAGCCTTC-CATT-GA-GGG--TAATGGGAGAGAACATCGAGTCAGAAGTTATTCTTGTTTACGTAGAATCGCCTGGGTCCGC"));
+
+        score_matrix = iterative_pairwise_alignment_cost(seq8, seq7, &sub_matrix, 5, false).unwrap();
+        assert_eq!(score_matrix[seq8.sequence.len()][seq7.sequence.len()], 325);
     }
 }
 
