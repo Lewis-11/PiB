@@ -8,13 +8,15 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  
+defaults:
+  run:
+    working-directory: ./msa
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./msa
 
     steps:
     - uses: actions/checkout@v3
