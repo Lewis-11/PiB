@@ -1,5 +1,7 @@
 # Project in Bioinformatics
 
+[![Build & Test](https://github.com/Lewis-11/PiB/actions/workflows/rust.yml/badge.svg)](https://github.com/Lewis-11/PiB/actions/workflows/rust.yml)
+
 Methods to present and implement
 --------------------------------
 
