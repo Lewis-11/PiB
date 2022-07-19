@@ -18,14 +18,23 @@ fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence,
 
     let mut score_matrix = vec![vec![0; m]; n];
 
+    let initial_values = if maximize {
+        (i32::MIN, i32::MIN, i32::MIN, i32::MIN)
+    } else {
+        (i32::MAX, i32::MAX, i32::MAX, i32::MAX)
+    };
+
+    let min_max_fn : &dyn Fn(i32, i32) -> i32 = if maximize {
+        &max
+    } else {
+        &min
+    };
+
     for i in 0..n {
         for j in 0..m {
 
-            let (mut v1, mut v2, mut v3, mut v4): (i32, i32, i32, i32) =  if maximize {
-                (i32::MIN, i32::MIN, i32::MIN, i32::MIN)
-            } else {
-                (i32::MAX, i32::MAX, i32::MAX, i32::MAX)
-            };
+            let (mut v1, mut v2, mut v3, mut v4): (i32, i32, i32, i32) =  initial_values;
+
             if i>0 && j>0 {
                 v1 = score_matrix[i-1][j-1] + sub_matrix[&(seq1_bytes[i-1] as char)][&(seq2_bytes[j-1] as char)];
             }
@@ -39,11 +48,8 @@ fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence,
                 v4 = 0;
             }
 
-            if maximize {
-                score_matrix[i][j] = max(v1, max(v2, max(v3, v4)));
-            } else {
-                score_matrix[i][j] = min(v1, min(v2, min(v3, v4)));
-            }
+            score_matrix[i][j] = min_max_fn(v1, min_max_fn(v2, min_max_fn(v3, v4)));
+
         }
     }
     return Some(score_matrix);
