@@ -75,13 +75,8 @@ fn main() {
             for record in &records {
                 println!("{}", record);
             }
-            let alignment = alignment::pairwise_alignment(
-                &records[0],
-                &records[1],
-                &sm,
-                *gap_cost,
-                *maximize,
-            ).expect("pairwise alignment failed");
+            let alignment = algorithms::gusfield_msa(&records, &sm, *gap_cost, *maximize
+            ).expect("gusfields alignment failed");
             println!("{}", alignment);
 
         }
