@@ -68,16 +68,14 @@ fn main() {
                 records, submat, maximize
             );
             let sm = utils::read_submatrix_file(submat);
-            for (key, value) in sm.iter() {
-                println!("{}:{:?}", key, value);
-            }
             let records = fasta::read_fasta_file(records);
+            println!("Sequences to align:");
             for record in &records {
                 println!("{}", record);
             }
             let alignment = algorithms::gusfield_msa(&records, &sm, *gap_cost, *maximize
             ).expect("gusfields alignment failed");
-            println!("{}", alignment);
+            println!("\n{}", alignment);
 
         }
         Commands::Mst {

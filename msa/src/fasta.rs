@@ -10,7 +10,13 @@ pub(crate) struct FastaSequence {
 // Function for printing the FastaSequence struct
 impl std::fmt::Display for FastaSequence {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        return write!(f, "{{\nname: {}\nseq: {}\n}}", self.name, self.sequence);
+        // Print in the the name and the sequence splitted in lines of 64 characters
+        write!(f, ">{}\n", self.name)?;
+        for line in self.sequence.as_bytes().chunks(64) {
+            write!(f, "{}", String::from_utf8_lossy(&line))?;
+            write!(f, "\n")?;
+        }
+        return Ok(());
     }
 }
 // Function for creating a FastaSequence struct
@@ -31,10 +37,11 @@ pub(crate) struct Alignment {
 // Function for printing the Alignment struct
 impl std::fmt::Display for Alignment {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "; score of alignment: {}\n", self.score)?;
         for seq in &self.sequences {
-            write!(f, "{}\n", seq.sequence)?;
+            write!(f, "{}\n", seq)?;
         }
-        return write!(f, "score: {}", self.score);
+        return Ok(());
     }
 }
 // Function for creating new Alignment struct
