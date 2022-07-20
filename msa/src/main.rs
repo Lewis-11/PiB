@@ -27,6 +27,9 @@ enum Commands {
         /// Should we maximize the cost ?
         #[clap(short, long, value_parser, default_value_t = false)]
         maximize: bool,
+        /// Gap cost
+        #[clap(short, long, value_parser, default_value_t = 1)]
+        gap_cost: i32,
     },
 
     /// Gusfield's 2-approximation algorithm using minimum spanning trees
@@ -42,6 +45,9 @@ enum Commands {
         /// Should we maximize the cost ?
         #[clap(short, long, value_parser, default_value_t = false)]
         maximize: bool,
+        /// Gap cost
+        #[clap(short, long, value_parser, default_value_t = 1)]
+        gap_cost: i32,
     },
 }
 
@@ -55,6 +61,7 @@ fn main() {
             records,
             submat,
             maximize,
+            gap_cost,
         } => {
             println!(
                 "we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}",
@@ -72,7 +79,7 @@ fn main() {
                 &records[0],
                 &records[1],
                 &sm,
-                5,
+                *gap_cost,
                 *maximize,
             ).expect("pairwise alignment failed");
             println!("{}", alignment);
@@ -82,10 +89,11 @@ fn main() {
             records,
             submat,
             maximize,
+            gap_cost,
         } => {
             println!(
-                "we should process the 'mst' subcommand with parameters: {:?},{:?},{:?}",
-                records, submat, maximize
+                "we should process the 'mst' subcommand with parameters: {:?},{:?},{:?},{:?}",
+                records, submat, maximize, gap_cost
             );
         }
     }
