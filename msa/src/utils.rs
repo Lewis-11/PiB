@@ -4,19 +4,19 @@ use std::io::Read;
 
 pub(crate) fn parse_submatrix_string(
     submatrix_string: String,
-) -> HashMap<char, HashMap<char, i32>> {
+) -> HashMap<u8, HashMap<u8, i32>> {
     let mut submatrix = HashMap::new();
     let mut lines = submatrix_string.lines();
-    // splits the first line removing ',' and store the rest into a vector of characters
+    // splits the first line removing ',' and store the rest into a vector of bytes
     let header = lines
         .next()
         .expect("[!] Error parsing submatrix: string content is empty")
         .split(',')
-        .map(|x| x.trim().to_string().chars().next().unwrap())
-        .collect::<Vec<char>>();
+        .map(|x| x.as_bytes()[0])
+        .collect::<Vec<u8>>();
 
     for (i, line) in lines.enumerate() {
-        let h = header[i];
+        let h = header[i].clone();
         // splits the first line removing ',' and store the rest into a vector of i32
         let cost = line
             .split(',')
@@ -24,7 +24,7 @@ pub(crate) fn parse_submatrix_string(
             .collect::<Vec<i32>>();
         let mut hm = HashMap::new();
         for (j, c) in cost.iter().enumerate() {
-            hm.insert(header[j], *c);
+            hm.insert(header[j].clone(), *c);
         }
         submatrix.insert(h, hm);
     }
@@ -33,7 +33,7 @@ pub(crate) fn parse_submatrix_string(
 
 // Parse submatrix indicating cost of subtitution for each pair of characters.
 // Returns a hashmap of the form: [char1][char2] -> cost.
-pub(crate) fn read_submatrix_file(filename: &str) -> HashMap<char, HashMap<char, i32>> {
+pub(crate) fn read_submatrix_file(filename: &str) -> HashMap<u8, HashMap<u8, i32>> {
     let mut file = File::open(filename).expect("[!] Error parsing submatrix file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
@@ -62,29 +62,29 @@ mod tests {
 
         assert_eq!(4, result.len());
 
-        assert_eq!(4, result[&'T'].len());
-        assert_eq!(4, result[&'C'].len());
-        assert_eq!(4, result[&'G'].len());
-        assert_eq!(4, result[&'A'].len());
+        assert_eq!(4, result[&b'T'].len());
+        assert_eq!(4, result[&b'C'].len());
+        assert_eq!(4, result[&b'G'].len());
+        assert_eq!(4, result[&b'A'].len());
 
-        assert_eq!(0, result[&'T'][&'T']);
-        assert_eq!(12, result[&'T'][&'C']);
-        assert_eq!(2, result[&'T'][&'G']);
-        assert_eq!(5, result[&'T'][&'A']);
+        assert_eq!(0, result[&b'T'][&b'T']);
+        assert_eq!(12, result[&b'T'][&b'C']);
+        assert_eq!(2, result[&b'T'][&b'G']);
+        assert_eq!(5, result[&b'T'][&b'A']);
 
-        assert_eq!(3, result[&'C'][&'T']);
-        assert_eq!(0, result[&'C'][&'C']);
-        assert_eq!(11, result[&'C'][&'G']);
-        assert_eq!(1, result[&'C'][&'A']);
+        assert_eq!(3, result[&b'C'][&b'T']);
+        assert_eq!(0, result[&b'C'][&b'C']);
+        assert_eq!(11, result[&b'C'][&b'G']);
+        assert_eq!(1, result[&b'C'][&b'A']);
 
-        assert_eq!(55, result[&'G'][&'T']);
-        assert_eq!(3, result[&'G'][&'C']);
-        assert_eq!(0, result[&'G'][&'G']);
-        assert_eq!(9, result[&'G'][&'A']);
+        assert_eq!(55, result[&b'G'][&b'T']);
+        assert_eq!(3, result[&b'G'][&b'C']);
+        assert_eq!(0, result[&b'G'][&b'G']);
+        assert_eq!(9, result[&b'G'][&b'A']);
 
-        assert_eq!(1, result[&'A'][&'T']);
-        assert_eq!(2, result[&'A'][&'C']);
-        assert_eq!(3, result[&'A'][&'G']);
-        assert_eq!(0, result[&'A'][&'A']);
+        assert_eq!(1, result[&b'A'][&b'T']);
+        assert_eq!(2, result[&b'A'][&b'C']);
+        assert_eq!(3, result[&b'A'][&b'G']);
+        assert_eq!(0, result[&b'A'][&b'A']);
     }
 }
