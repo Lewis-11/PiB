@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use crate::fasta::{Alignment, FastaSequence};
 use crate::alignment::pairwise_alignment;
 
-pub(crate) fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<Alignment>>> {
+pub fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<Alignment>>> {
     let n = sequences.len();
     // initialize the adjacency matrix
     let mut adjacency_matrix = vec![vec![Alignment::new(vec![], 0); n]; n];

@@ -2,11 +2,13 @@ use std::cmp::{max, min};
 use std::collections::HashMap;
 use crate::fasta::FastaSequence;
 use crate::fasta::Alignment;
+use crate::adjacency_matrix::{alignment_adjacency_matrix, u8_matrix_to_alignment};
+use crate::gusfields::gusfield_alignment;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
 pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
-
+    
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0 {
         return None;
     }
@@ -103,7 +105,11 @@ pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub
     return Some(Alignment::new_pairwise(output1, output2, score));
 }
 
-
+pub(crate) fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
+    let adjacency_matrix = alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
+    let alignment_matrix = gusfield_alignment(&adjacency_matrix);
+    return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);
+}
 
 // Tests
 #[cfg(test)]
