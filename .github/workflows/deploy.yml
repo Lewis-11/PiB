@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  [push]
+
+env:
+  CARGO_TERM_COLOR: always
+  
+defaults:
+  run:
+    working-directory: ./msa
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install wasm-pack
+      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+    - name: Generate pkg files
+      run: wasm-pack build
+    - name: Replace GIT_BRANCH_PLACEHOLDER, COMMIT_HASH_PLACEHOLDER and DATE_PLACEHOLDER
+      run: |
+        cd www
+        sed -i 's/GIT_BRANCH_PLACEHOLDER/'"${GITHUB_REF##*/}"'/g' index.html
+        sed -i 's/COMMIT_HASH_PLACEHOLDER/'"${GITHUB_SHA}"'/g' index.html
+        sed -i 's/DATE_PLACEHOLDER/'"$(TZ=Europe/Copenhagen date)"'/g' index.html
+    - name: Compile Webpack
+      run: cd www && npm install && npm run build
+    - name: Copy to server
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.RSA_KEY }}
+        REMOTE_HOST: ${{ secrets.HOST }}
+        SOURCE: "msa/www/dist/"
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        REMOTE_PORT: ${{ secrets.PORT }}
+        TARGET: "builds/${GITHUB_REF##*/}"
