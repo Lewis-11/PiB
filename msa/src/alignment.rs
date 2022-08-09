@@ -7,8 +7,8 @@ use crate::gusfields::gusfield_alignment;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
-pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
-    
+pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
+
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0 {
         return None;
     }
@@ -39,7 +39,7 @@ pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &Fas
             let (mut v1, mut v2, mut v3, mut v4): (i32, i32, i32, i32) =  initial_values;
 
             if i>0 && j>0 {
-                v1 = score_matrix[i-1][j-1] + sub_matrix[&(seq1_bytes[i-1] as char)][&(seq2_bytes[j-1] as char)];
+                v1 = score_matrix[i-1][j-1] + sub_matrix[&(seq1_bytes[i-1])][&(seq2_bytes[j-1])];
             }
             if i>0 {
                 v2 = score_matrix[i-1][j] + gap_cost;
@@ -58,7 +58,7 @@ pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &Fas
     return Some(score_matrix);
 }
 
-pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
+pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
 
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0  || score_matrix.len() == 0 {
         return None;
@@ -75,7 +75,7 @@ pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaS
 
 
     while i>0 || j>0 {
-        if i>0 && j>0 && score_matrix[i][j] == score_matrix[i-1][j-1] + sub_matrix[&(seq1_bytes[i-1] as char)][&(seq2_bytes[j-1] as char)] {
+        if i>0 && j>0 && score_matrix[i][j] == score_matrix[i-1][j-1] + sub_matrix[&(seq1_bytes[i-1])][&(seq2_bytes[j-1])] {
             alignment1.push(seq1_bytes[i-1] as char);
             alignment2.push(seq2_bytes[j-1] as char);
             i-=1;
@@ -98,14 +98,14 @@ pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaS
     None
 }
 
-pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
+pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
     let score_matrix: Vec<Vec<i32>> = iterative_pairwise_alignment_cost(seq1, seq2, sub_matrix, gap_cost, maximize)?;
     let (output1, output2) = iterative_backtracking(&score_matrix, seq1, seq2, sub_matrix, gap_cost)?;
     let score = score_matrix[seq1.sequence.len()][seq2.sequence.len()];
     return Some(Alignment::new_pairwise(output1, output2, score));
 }
 
-pub(crate) fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
+pub(crate) fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
     let adjacency_matrix = alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
     let alignment_matrix = gusfield_alignment(&adjacency_matrix);
     return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);

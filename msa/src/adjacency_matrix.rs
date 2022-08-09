@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use crate::fasta::{Alignment, FastaSequence};
 use crate::alignment::pairwise_alignment;
 
-pub fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<Alignment>>> {
+pub(crate) fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<Alignment>>> {
     let n = sequences.len();
     // initialize the adjacency matrix
     let mut adjacency_matrix = vec![vec![Alignment::new(vec![], 0); n]; n];
@@ -18,7 +18,7 @@ pub fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &H
     return Some(adjacency_matrix);
 }
 
-pub(crate) fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> Option<Alignment> {
+pub(crate) fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<Alignment> {
     let score = get_alignment_cost(matrix, sub_matrix, gap_cost);
     let mut output = Alignment::new(Vec::new(), score);
     let n = matrix.len();
@@ -31,7 +31,7 @@ pub(crate) fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<Fast
     Some(output)
 }
 
-fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<char, HashMap<char, i32>>, gap_cost: i32) -> i32{
+fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> i32{
     let n_rows = matrix.len();
     let n_cols = matrix[0].len();
     let mut cost = 0;
@@ -45,8 +45,8 @@ fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<char, HashMap<
                     cost += gap_cost;
                 }
                 else {
-                    let c1 = matrix[r1][col] as char;
-                    let c2 = matrix[r2][col] as char;
+                    let c1 = matrix[r1][col];
+                    let c2 = matrix[r2][col];
                     cost += sub_matrix[&c1][&c2];
                 }
 
