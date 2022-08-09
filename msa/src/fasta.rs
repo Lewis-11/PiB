@@ -1,9 +1,12 @@
 use std::fs::File;
 use std::io::Read;
 
+use serde::{Serialize, Deserialize};
+
 // Fasta Sequence struct
-#[derive(Debug, Clone)]
-pub(crate) struct FastaSequence {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FastaSequence {
     pub(crate) name: String,
     pub(crate) sequence: String,
 }
@@ -29,8 +32,9 @@ impl FastaSequence {
     }
 }
 
-#[derive(Debug, Clone)]
-pub(crate) struct Alignment {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Alignment {
     pub(crate) sequences: Vec<FastaSequence>,
     pub(crate) score: i32,
 }

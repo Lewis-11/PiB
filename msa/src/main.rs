@@ -1,9 +1,13 @@
 mod fasta;
 mod utils;
+mod adjacency_matrix;
+mod gusfields;
 mod alignment;
-mod algorithms;
 
 use clap::{Parser, Subcommand};
+use alignment::gusfield_msa;
+use fasta::read_fasta_file;
+use utils::read_submatrix_file;
 
 /// Multiple sequence alignment using minimum spanning trees
 #[derive(Parser)]
@@ -67,13 +71,13 @@ fn main() {
                 "we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}",
                 records, submat, maximize
             );
-            let sm = utils::read_submatrix_file(submat);
-            let records = fasta::read_fasta_file(records);
+            let sm = read_submatrix_file(submat);
+            let records = read_fasta_file(records);
             println!("Sequences to align:");
             for record in &records {
                 println!("{}", record);
             }
-            let alignment = algorithms::gusfield_msa(&records, &sm, *gap_cost, *maximize
+            let alignment = gusfield_msa(&records, &sm, *gap_cost, *maximize
             ).expect("gusfields alignment failed");
             println!("\n{}", alignment);
 

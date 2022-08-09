@@ -5,6 +5,12 @@ edition = "2021"
 authors = ["Luis Rodríguez Rubio <luis.rodriguez@post.au.dk>", "Sam Martin Vargas Giagnocavo <sam.martin@post.au.dk>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "src/wasm.rs"
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 clap = { version = "3.2.8", features = ["derive"] }
+serde = { version = "1.0.140", features = ["derive"] }
+wasm-bindgen = { version = "0.2.8" }
+serde-wasm-bindgen = { version = "0.4.3" } 
