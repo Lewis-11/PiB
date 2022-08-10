@@ -11,6 +11,7 @@ pub(crate) fn parse_submatrix_string(
     let header = lines
         .next()
         .expect("[!] Error parsing submatrix: string content is empty")
+        .to_uppercase().as_str()
         .split(',')
         .map(|x| x.as_bytes()[0])
         .collect::<Vec<u8>>();
