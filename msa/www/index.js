@@ -24,7 +24,7 @@ import * as msa from "../pkg/msa";
     displayCanvas.height = displayCanvas.clientHeight;
 
     let ctx = displayCanvas.getContext("2d");
-    ctx.font = `${CANVAS_FONT_SIZE}px Arial`;
+    ctx.font = `${CANVAS_FONT_SIZE}px Courier New`;
     ctx.fillStyle = "white";
     ctx.textBaseline = 'middle';
     ctx.textAlign = "center";
