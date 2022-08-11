@@ -9,6 +9,7 @@ mod utils;
 mod alignment;
 mod adjacency_matrix;
 mod gusfields;
+mod kruskal;
 
 #[wasm_bindgen]
 pub fn wasm_serialize_fasta_string(fasta_string: String) -> JsValue {
