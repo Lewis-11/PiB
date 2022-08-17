@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GIT_BRANCH_PLACEHOLDER</title>
     <script src="https://kit.fontawesome.com/7ef10c4d6b.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   </head>
   <body>
     <nav class="navbar is-success" role="navigation" aria-label="main navigation">
@@ -17,7 +16,7 @@
             <span class="subtitle is-5">Bioinformatics</span>
           </span>
         </a>
-    
+
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -41,93 +40,126 @@
         </div>
       </div>
     </nav>
-    <noscript>Our website contains webassembly and javascript content, please enable javascript in your browser :)</noscript>
+    <noscript>Our website contains WebAssembly and JavaScript content, please enable JavaScript in your browser :)</noscript>
     <script src="./bootstrap.js"></script>
     <div>
-      <canvas id="display-canvas" style="width: 100%; height: 370px; display: block; background-color: black;"></canvas>
+      <canvas id="display-canvas"></canvas>
     </div>
-    <div class="container" style="margin-top: 1rem; margin-bottom: 1rem">
-
-      <nav class="level is-mobile">
+    <div id="main-container" class="container">
+      <nav id="control-container" class="level is-mobile" aria-label="Visualization menu">
         <div class="level-item has-text-centered">
-          <div id="button-play" style="cursor: pointer;">
+          <div id="button-play" class="is-clickable">
             <p class="heading">Start</p>
-            <i class="title fa-solid fa-play"></i>
+            <em class="title fa-solid fa-play"></em>
           </div>
         </div>
         <div class="level-item has-text-centered">
-          <div style="cursor: pointer;">
+          <div id="button-step" class="is-clickable">
             <p class="heading">Step</p>
-            <i class="title fa-solid fa-forward-step"></i>
+            <em class="title fa-solid fa-forward-step"></em>
           </div>
         </div>
         <div class="level-item has-text-centered">
-          <div style="cursor: pointer;">
+          <div id="button-ff" class="is-clickable">
             <p class="heading">Fast-Forward</p>
-            <i class="title fa-solid fa-forward-fast"></i>
+            <em class="title fa-solid fa-forward-fast"></em>
           </div>
         </div>
         <div class="level-item has-text-centered">
-          <div style="cursor: pointer;">
+          <div id="button-pause" class="is-clickable">
             <p class="heading">Pause</p>
-            <i class="title fa-solid fa-pause"></i>
+            <em class="title fa-solid fa-pause"></em>
           </div>
         </div>
         <div class="level-item has-text-centered">
-          <div style="cursor: pointer;">
+          <div id="button-stop" class="is-clickable">
             <p class="heading">Stop</p>
-            <i class="title fa-solid fa-stop"></i>
+            <em class="title fa-solid fa-stop"></em>
           </div>
         </div>
       </nav>
       
       <hr>
 
-      <div class="field is-grouped">
-        <div class="control is-expanded">
-          <label class="label">FASTA</label>
-          <textarea id="field-fasta" class="textarea" placeholder="Paste the contents of your FASTA file here. You can also drag & drop a file."></textarea>
-          <p class="help">Check the valid format here.</p>
-        </div>
-        <div class="control is-expanded">
-          <label class="label">Cost matrix</label>
-          <textarea id="field-cost-matrix" class="textarea" placeholder="Paste the contents of your file here. You can also drag & drop a file."></textarea>
-          <p class="help">Check the valid format here.</p>
-        </div>
-      </div>
-
-      <div class="field is-grouped">
-        <div class="control">
-          <label class="label">Gap cost</label>
-          <input id="field-gap-cost" class="input" type="number" placeholder="1" value="1">
-          <p class="help">Only linear gap cost is allowed.</p>
-        </div>
-        <div class="control">
-          <label class="label">Goal</label>
-          <div class="select">
-            <select id="field-maximize">
-              <option value="false" selected>Minimize</option>
-              <option value="true">Maximize</option>
-            </select>
+      <div id="main-form">
+        <div id="text-based-container">
+          <div class="text-or-file-container">
+            <div class="control text-container">
+              <label class="label">FASTA</label>
+              <input id="file-selector-fasta" hidden type="file" accept=".fasta,.fas"/>
+              <textarea
+                id="field-fasta"
+                class="textarea"
+                placeholder="Paste the contents of your FASTA file here..."></textarea>
+              <p class="help">
+                Check the valid format <a id="help-fasta-format">here</a>.
+                Click <a id="help-fasta-example">here</a> to load an example.
+              </p>
+            </div>
+            <div id="selector-fasta" class="file-container">
+              <em style="font-size: 2rem" class="fa-regular fa-file"></em>
+              <span>...or select a FASTA file from here.</span>
+              <div id="name-selected-fasta-file" class="name-selected-file">
+				  <em class="fa-solid fa-xmark"></em>
+				  <span class="name-selected-value"></span>
+			  </div>
+            </div>
+          </div>
+          <div class="text-or-file-container">
+            <div class="control text-container">
+              <label class="label">Cost matrix</label>
+              <input id="file-selector-cost-matrix" hidden type="file" accept=".txt"/>
+              <textarea
+                id="field-cost-matrix"
+                class="textarea"
+                placeholder="Paste the contents of your file here..."></textarea>
+              <p class="help">
+                Check the valid format <a id="help-cost-matrix-format">here</a>.
+                Click <a id="help-cost-matrix-example">here</a> to load an example.
+              </p>
+            </div>
+            <div id="selector-cost-matrix" class="file-container">
+              <em style="font-size: 2rem" class="fa-regular fa-file"></em>
+              <span>...or select a TXT file from here.</span>
+              <div id="name-selected-cost-matrix-file" class="name-selected-file">
+				  <em class="fa-solid fa-xmark"></em>
+				  <span class="name-selected-value"></span>
+			  </div>
+            </div>
           </div>
         </div>
-        <div class="control">
-          <label class="label">Algorithm</label>
-          <div class="select">
-            <select id="field-algorithm">
-              <option selected>Gusfield</option>
-              <option>Gusfield + Kruskal</option>
-              <option>Gusfield + Prism</option>
-            </select>
+        <div id="parameter-based-container" class="field is-grouped">
+          <div class="control">
+            <label class="label">Gap cost</label>
+            <input id="field-gap-cost" class="input" type="number" placeholder="1" value="1">
+            <p class="help">Only linear gap cost is allowed.</p>
+          </div>
+          <div class="control">
+            <label class="label">Goal</label>
+            <div class="select">
+              <select id="field-maximize">
+                <option value="false" selected>Minimize</option>
+                <option value="true">Maximize</option>
+              </select>
+            </div>
+          </div>
+          <div class="control">
+            <label class="label">Algorithm</label>
+            <div class="select">
+              <select id="field-algorithm">
+                <option selected>Gusfield</option>
+                <option>Gusfield + Kruskal</option>
+                <option>Gusfield + Prism</option>
+              </select>
+            </div>
+          </div>
+          <div class="control">
+            <label class="label">Step interval</label>
+            <input id="field-step-interval" class="input" type="number" placeholder="0.5" value="0.5">
+            <p class="help">Seconds between UI updates.</p>
           </div>
         </div>
-        <div class="control">
-          <label class="label">Step interval</label>
-          <input id="field-step-interval" class="input" type="number" placeholder="0.5" value="0.5">
-          <p class="help">Seconds between UI updates.</p>
-        </div>
       </div>
-      
     </div>
   </body>
   <footer class="footer">
