@@ -118,7 +118,7 @@ pub(crate) fn kruskal_sorted_edges_alignment(adjacency_matrix: &Vec<Vec<Alignmen
     matrix.push(adjacency_matrix[tree[0].0][tree[0].1].sequences[0].sequence.as_bytes().to_vec());
     inserted[tree[0].0] = 0;
     while matrix.len() < n {
-        for (i, j) in tree {
+        for (i, j) in &tree {
             if inserted[i] != n && inserted[j] == n {
                 insert_sequence(&mut matrix, &adjacency_matrix[j][i], inserted[i]);
                 inserted[j] = matrix.len()-1;
