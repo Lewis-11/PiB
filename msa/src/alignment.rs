@@ -4,6 +4,7 @@ use crate::fasta::FastaSequence;
 use crate::fasta::Alignment;
 use crate::adjacency_matrix::{alignment_adjacency_matrix, u8_matrix_to_alignment};
 use crate::gusfields::gusfield_alignment;
+use crate::kruskal::kruskal_sorted_edges_alignment;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
@@ -108,6 +109,12 @@ pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub
 pub(crate) fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
     let adjacency_matrix = alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
     let alignment_matrix = gusfield_alignment(&adjacency_matrix);
+    return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);
+}
+
+pub(crate) fn kruskal_sorted_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
+    let adjacency_matrix = alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
+    let alignment_matrix = kruskal_sorted_edges_alignment(&adjacency_matrix, maximize);
     return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);
 }
 
