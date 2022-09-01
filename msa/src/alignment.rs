@@ -106,7 +106,7 @@ pub(crate) fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub
     return Some(Alignment::new_pairwise(output1, output2, score));
 }
 
-pub(crate) fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
+pub fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
     let adjacency_matrix = alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
     let alignment_matrix = gusfield_alignment(&adjacency_matrix);
     return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);
