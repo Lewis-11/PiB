@@ -34,7 +34,7 @@ pub(crate) fn parse_submatrix_string(
 
 // Parse submatrix indicating cost of subtitution for each pair of characters.
 // Returns a hashmap of the form: [char1][char2] -> cost.
-pub(crate) fn read_submatrix_file(filename: &str) -> HashMap<u8, HashMap<u8, i32>> {
+pub fn read_submatrix_file(filename: &str) -> HashMap<u8, HashMap<u8, i32>> {
     let mut file = File::open(filename).expect("[!] Error parsing submatrix file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
