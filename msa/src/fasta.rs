@@ -1,14 +1,17 @@
-use std::fs::File;
+use std::{fs::File, cmp::Ordering};
 use std::io::Read;
 
 use serde::{Serialize, Deserialize};
 
+/**********************************************************************
+ * Struct Definition
+ */
 // Fasta Sequence struct
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct FastaSequence {
-    pub(crate) name: String,
-    pub(crate) sequence: String,
+    pub name: String,
+    pub sequence: String,
 }
 // Function for printing the FastaSequence struct
 impl std::fmt::Display for FastaSequence {
@@ -24,7 +27,7 @@ impl std::fmt::Display for FastaSequence {
 }
 // Function for creating a FastaSequence struct
 impl FastaSequence {
-    pub(crate) fn new(name: String, sequence: String) -> FastaSequence {
+    pub fn new(name: String, sequence: String) -> FastaSequence {
         return FastaSequence {
             name,
             sequence,
@@ -35,8 +38,8 @@ impl FastaSequence {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Alignment {
-    pub(crate) sequences: Vec<FastaSequence>,
-    pub(crate) score: i32,
+    pub sequences: Vec<FastaSequence>,
+    pub score: i32,
 }
 // Function for printing the Alignment struct
 impl std::fmt::Display for Alignment {
@@ -48,16 +51,37 @@ impl std::fmt::Display for Alignment {
         return Ok(());
     }
 }
+
+impl PartialEq for Alignment {
+    fn eq(&self, other: &Self) -> bool {
+        true
+    }
+}
+
+impl Eq for Alignment {}
+
+impl Ord for Alignment {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.score.cmp(&other.score)
+    }
+}
+
+impl PartialOrd for Alignment {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 // Function for creating new Alignment struct
 impl Alignment {
-    pub(crate) fn new_pairwise(seq1: FastaSequence, seq2: FastaSequence, score: i32) -> Alignment {
+    pub fn new_pairwise(seq1: FastaSequence, seq2: FastaSequence, score: i32) -> Alignment {
         return Alignment {
             sequences: vec![seq1, seq2],
             score,
         };
     }
     // Function for creating a new Alignment struct from a vector of FastaSequence structs
-    pub(crate) fn new(sequences: Vec<FastaSequence>, score: i32) -> Alignment {
+    pub fn new(sequences: Vec<FastaSequence>, score: i32) -> Alignment {
         return Alignment {
             sequences,
             score,
@@ -66,7 +90,10 @@ impl Alignment {
 
 }
 
-pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
+/**********************************************************************
+ * Functions
+ */
+pub fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
     let mut sequences = Vec::new();
     let mut sequence = FastaSequence::new(String::new(), String::new());
     let mut is_sequence = false;
@@ -98,7 +125,7 @@ pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
 // - skip the description lines tarting with ';'
 // - the name of the sequence starting with '>'
 // - the sequence itself
-pub(crate) fn read_fasta_file(file_name: &str) -> Vec<FastaSequence> {
+pub fn read_fasta_file(file_name: &str) -> Vec<FastaSequence> {
     let mut file = File::open(file_name).expect("[!] Error parsing fasta file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();

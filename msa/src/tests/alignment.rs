@@ -2,11 +2,10 @@ mod tests {
     use std::str::FromStr;
     use crate::fasta::parse_fasta_string;
     use crate::utils::parse_submatrix_string;
-    use crate::alignment::iterative_pairwise_alignment_cost;
-    use crate::alignment::iterative_backtracking;
+    use crate::alignment::{iterative_pairwise_alignment_cost, iterative_backtracking};
 
     #[test]
-    fn test_sample_sequences_alignment() {
+    fn sample_sequences_alignment() {
         let single_line_fasta = String::from_str(
             ">seq1\n\
             acgtgtcaacgt\n\
