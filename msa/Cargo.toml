@@ -3,8 +3,8 @@ name = "msa"
 version = "0.1.0"
 edition = "2021"
 authors = ["Luis Rodríguez Rubio <luis.rodriguez@post.au.dk>", "Sam Martin Vargas Giagnocavo <sam.martin@post.au.dk>"]
+description = "Using Minimum Spanning Trees as an alternative to Gusfield's guide tree"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 path = "src/wasm.rs"
 crate-type = ["cdylib", "rlib"]
