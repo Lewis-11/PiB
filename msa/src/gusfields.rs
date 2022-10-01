@@ -1,6 +1,6 @@
 use crate::fasta::Alignment;
 
-pub(crate) fn get_center_string(adjacency_matrix: &Vec<Vec<Alignment>>, maximize: bool) -> usize {
+pub fn get_center_string(adjacency_matrix: &Vec<Vec<Alignment>>, maximize: bool) -> usize {
     let n = adjacency_matrix.len();
     let mut center_string = 0;
     let mut max_score = 0;
@@ -27,7 +27,7 @@ fn insert_gap_at(matrix: &mut Vec<Vec<u8>>, index: usize) {
     }
 }
 
-pub(crate) fn gusfield_alignment(adjacency_matrix: &Vec<Vec<Alignment>>) -> Vec<Vec<u8>> {
+pub fn gusfield_alignment(adjacency_matrix: &Vec<Vec<Alignment>>) -> Vec<Vec<u8>> {
     let n = adjacency_matrix.len();
     let center_string = get_center_string(adjacency_matrix, true);
     let mut matrix = Vec::new();

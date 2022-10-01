@@ -4,14 +4,14 @@ mod tests {
     use crate::fasta::parse_fasta_string;
 
     #[test]
-    fn test_empty_fasta() {
+    fn empty_fasta() {
         let empty_fasta = String::new();
         let result = parse_fasta_string(empty_fasta);
         assert_eq!(0, result.len());
     }
 
     #[test]
-    fn test_singleline_fasta() {
+    fn singleline_fasta() {
         let singleline_fasta = String::from_str(
             ">s1\nAA\n>s2\nBBB\n>s3\nCCCC"
         ).unwrap();
@@ -27,7 +27,7 @@ mod tests {
     }
 
     #[test]
-    fn test_multiline_fasta() {
+    fn multiline_fasta() {
         let multiline_fasta = String::from_str(
             ">s1\nAA\nAA\n>s2\nBBB\nBBB\n>s3\nCCCC\nCCCC"
         ).unwrap();
