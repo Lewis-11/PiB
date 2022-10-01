@@ -221,8 +221,7 @@ import * as CONST from './constants';
 	}
 
 	helpFastaExample.onclick = function (_e) {
-		console.log(fieldFasta.disabled)
-		if (fieldFasta.disabled != true) {
+		if (!fieldFasta.disabled) {
 			fieldFasta.value = CONST.FASTA_EXAMPLE_VALUE
 		}
 	}
@@ -232,8 +231,7 @@ import * as CONST from './constants';
 	}
 
 	helpCostMatrixExample.onclick = function (_e) {
-		console.log(fieldCostMatrix.disabled)
-		if (fieldCostMatrix.disabled != true) {
+		if (!fieldCostMatrix.disabled) {
 			fieldCostMatrix.value = CONST.COST_MATRIX_EXAMPLE_VALUE
 		}
 	}
