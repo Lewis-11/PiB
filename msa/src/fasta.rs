@@ -1,8 +1,11 @@
-use std::fs::File;
+use std::{fs::File, cmp::Ordering};
 use std::io::Read;
 
 use serde::{Serialize, Deserialize};
 
+/**********************************************************************
+ * Struct Definition
+ */
 // Fasta Sequence struct
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -66,6 +69,9 @@ impl Alignment {
 
 }
 
+/**********************************************************************
+ * Functions
+ */
 pub fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
     let mut sequences = Vec::new();
     let mut sequence = FastaSequence::new(String::new(), String::new());

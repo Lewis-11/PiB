@@ -5,13 +5,13 @@ mod tests {
 
     #[test]
     #[should_panic]
-    fn test_empty_submatrix() {
+    fn empty_submatrix() {
         let empty_submatrix = String::new();
         parse_submatrix_string(empty_submatrix);
     }
 
     #[test]
-    fn test_nonempty_submatrix() {
+    fn nonempty_submatrix() {
         let nonempty_submatrix =
             String::from_str("T,C,G,A\n0,12,2,5\n3,0,11,1\n55,3,0,9\n1,2,3,0").unwrap();
         let result = parse_submatrix_string(nonempty_submatrix);

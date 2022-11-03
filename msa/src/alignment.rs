@@ -7,7 +7,13 @@ use crate::gusfields::gusfield_alignment;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
-pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<i32>>> {
+pub fn iterative_pairwise_alignment_cost(
+    seq1: &FastaSequence,
+    seq2: &FastaSequence,
+    sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
+    gap_cost: i32,
+    maximize: bool
+) -> Option<Vec<Vec<i32>>> {
 
     if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0 {
         return None;
@@ -58,9 +64,19 @@ pub(crate) fn iterative_pairwise_alignment_cost(seq1: &FastaSequence, seq2: &Fas
     return Some(score_matrix);
 }
 
-pub(crate) fn iterative_backtracking(score_matrix: &Vec<Vec<i32>>, seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<(FastaSequence, FastaSequence)> {
+pub fn iterative_backtracking(
+    score_matrix: &Vec<Vec<i32>>,
+    seq1: &FastaSequence,
+    seq2: &FastaSequence,
+    sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
+    gap_cost: i32
+) -> Option<(FastaSequence, FastaSequence)> {
 
-    if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0  || score_matrix.len() == 0 {
+    if seq1.sequence.len() == 0
+        || seq2.sequence.len() == 0
+        || sub_matrix.len() == 0
+        || score_matrix.len() == 0
+    {
         return None;
     }
 

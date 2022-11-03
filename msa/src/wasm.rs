@@ -25,19 +25,6 @@ pub fn wasm_serialize_submatrix(submatrix_string: String) -> JsValue {
     serde_wasm_bindgen::to_value(&submatrix_cost).unwrap()
 }
 
-/**
- * @param {FastaSequence} seq1 {name: string, sequence: string}
- * @param {FastaSequence} seq1 {name: string, sequence: string}
- * @param {HashMap [u8][u8] -> i32} sub_matrix
- * @param {number} gap_cost
- * @param {boolean} maximize
- * @returns {Alignment} {sequences: [FastaSequence, FastaSequence], score: number}
- */
-#[wasm_bindgen]
-pub fn wasm_pairwise_alignment(seq1: FastaSequence, seq2: FastaSequence, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Alignment {
-    return alignment::pairwise_alignment(&seq1, &seq2, sub_matrix, gap_cost, maximize).unwrap_or(Alignment::new(vec![], 0));
-}
-
 #[wasm_bindgen]
 pub fn wasm_gusfields(fasta_string: String, submatrix_string: String, gap_cost: i32, maximize: bool) -> JsValue {
     let records = parse_fasta_string(fasta_string);
