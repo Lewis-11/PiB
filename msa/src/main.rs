@@ -3,7 +3,6 @@ mod utils;
 mod adjacency_matrix;
 mod gusfields;
 mod alignment;
-mod msa;
 
 use clap::{Parser, Subcommand};
 use alignment::gusfield_msa;
