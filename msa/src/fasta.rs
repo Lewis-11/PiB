@@ -57,7 +57,7 @@ impl Alignment {
         };
     }
     // Function for creating a new Alignment struct from a vector of FastaSequence structs
-    pub(crate) fn new(sequences: Vec<FastaSequence>, score: i32) -> Alignment {
+    pub fn new(sequences: Vec<FastaSequence>, score: i32) -> Alignment {
         return Alignment {
             sequences,
             score,
@@ -66,7 +66,7 @@ impl Alignment {
 
 }
 
-pub(crate) fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
+pub fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
     let mut sequences = Vec::new();
     let mut sequence = FastaSequence::new(String::new(), String::new());
     let mut is_sequence = false;

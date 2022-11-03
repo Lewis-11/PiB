@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 
-pub(crate) fn parse_submatrix_string(
+pub fn parse_submatrix_string(
     submatrix_string: String,
 ) -> HashMap<u8, HashMap<u8, i32>> {
     let mut submatrix = HashMap::new();
