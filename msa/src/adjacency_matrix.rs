@@ -1,8 +1,8 @@
 use std::collections::HashMap;
-use crate::fasta::{Alignment, FastaSequence};
+use crate::fasta::{Alignment, Sequence};
 use crate::alignment::pairwise_alignment;
 
-pub fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<Alignment>>> {
+pub fn alignment_adjacency_matrix(sequences: &Vec<Sequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Vec<Vec<Alignment>>> {
     let n = sequences.len();
     // initialize the adjacency matrix
     let mut adjacency_matrix = vec![vec![Alignment::new(vec![], 0); n]; n];
@@ -18,13 +18,13 @@ pub fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &H
     return Some(adjacency_matrix);
 }
 
-pub fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<Alignment> {
+pub fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<Sequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<Alignment> {
     let score = get_alignment_cost(matrix, sub_matrix, gap_cost);
     let mut output = Alignment::new(Vec::new(), score);
     let n = matrix.len();
     for i in 0..n {
         let str = String::from_utf8(matrix[i].clone()).ok()?;
-        let seq = FastaSequence::new(sequences[i].name.clone(), str);
+        let seq = Sequence::new(sequences[i].name.clone(), str);
         output.sequences.push(seq);
     }
 

@@ -1,6 +1,6 @@
 use std::cmp::{max, min};
 use std::collections::HashMap;
-use crate::fasta::FastaSequence;
+use crate::fasta::Sequence;
 use crate::fasta::Alignment;
 use crate::adjacency_matrix::{alignment_adjacency_matrix, u8_matrix_to_alignment};
 use crate::gusfields::gusfield_alignment;
@@ -8,22 +8,22 @@ use crate::gusfields::gusfield_alignment;
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
 pub fn iterative_pairwise_alignment_cost(
-    seq1: &FastaSequence,
-    seq2: &FastaSequence,
+    seq1: &Sequence,
+    seq2: &Sequence,
     sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
     gap_cost: i32,
     maximize: bool
 ) -> Option<Vec<Vec<i32>>> {
 
-    if seq1.sequence.len() == 0 || seq2.sequence.len() == 0 || sub_matrix.len() == 0 {
+    if seq1.value.len() == 0 || seq2.value.len() == 0 || sub_matrix.len() == 0 {
         return None;
     }
 
-    let n = seq1.sequence.len() + 1;
-    let m = seq2.sequence.len() + 1;
+    let n = seq1.value.len() + 1;
+    let m = seq2.value.len() + 1;
 
-    let seq1_bytes = seq1.sequence.as_bytes();
-    let seq2_bytes = seq2.sequence.as_bytes();
+    let seq1_bytes = seq1.value.as_bytes();
+    let seq2_bytes = seq2.value.as_bytes();
 
     let mut score_matrix = vec![vec![0; m]; n];
 
@@ -66,25 +66,25 @@ pub fn iterative_pairwise_alignment_cost(
 
 pub fn iterative_backtracking(
     score_matrix: &Vec<Vec<i32>>,
-    seq1: &FastaSequence,
-    seq2: &FastaSequence,
+    seq1: &Sequence,
+    seq2: &Sequence,
     sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
     gap_cost: i32
-) -> Option<(FastaSequence, FastaSequence)> {
+) -> Option<(Sequence, Sequence)> {
 
-    if seq1.sequence.len() == 0
-        || seq2.sequence.len() == 0
+    if seq1.value.len() == 0
+        || seq2.value.len() == 0
         || sub_matrix.len() == 0
         || score_matrix.len() == 0
     {
         return None;
     }
 
-    let mut i = seq1.sequence.len();
-    let mut j = seq2.sequence.len();
+    let mut i = seq1.value.len();
+    let mut j = seq2.value.len();
 
-    let seq1_bytes = seq1.sequence.as_bytes();
-    let seq2_bytes = seq2.sequence.as_bytes();
+    let seq1_bytes = seq1.value.as_bytes();
+    let seq2_bytes = seq2.value.as_bytes();
 
     let mut alignment1 = String::new();
     let mut alignment2 = String::new();
@@ -106,11 +106,11 @@ pub fn iterative_backtracking(
             i -= 1;
         }
         if i == 0 && j == 0 {
-            let output1 = FastaSequence::new(
+            let output1 = Sequence::new(
                 seq1.name.clone(),
                 alignment1.chars().rev().collect::<String>()
             );
-            let output2 = FastaSequence::new(
+            let output2 = Sequence::new(
                 seq2.name.clone(),
                 alignment2.chars().rev().collect::<String>()
             );
@@ -121,8 +121,8 @@ pub fn iterative_backtracking(
 }
 
 pub fn pairwise_alignment(
-    seq1: &FastaSequence,
-    seq2: &FastaSequence,
+    seq1: &Sequence,
+    seq2: &Sequence,
     sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
     gap_cost: i32,
     maximize: bool
@@ -131,12 +131,12 @@ pub fn pairwise_alignment(
         iterative_pairwise_alignment_cost(seq1, seq2, sub_matrix, gap_cost, maximize)?;
     let (output1, output2) =
         iterative_backtracking(&score_matrix, seq1, seq2, sub_matrix, gap_cost)?;
-    let score = score_matrix[seq1.sequence.len()][seq2.sequence.len()];
+    let score = score_matrix[seq1.value.len()][seq2.value.len()];
     return Some(Alignment::new_pairwise(output1, output2, score));
 }
 
 pub fn gusfield_msa(
-    sequences: &Vec<FastaSequence>,
+    sequences: &Vec<Sequence>,
     sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
     gap_cost: i32,
     maximize: bool

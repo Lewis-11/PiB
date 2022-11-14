@@ -31,14 +31,14 @@ pub fn gusfield_alignment(adjacency_matrix: &Vec<Vec<Alignment>>) -> Vec<Vec<u8>
     let n = adjacency_matrix.len();
     let center_string = get_center_string(adjacency_matrix, true);
     let mut matrix = Vec::new();
-    matrix.push(adjacency_matrix[center_string][center_string].sequences[0].sequence.as_bytes().to_vec());
+    matrix.push(adjacency_matrix[center_string][center_string].sequences[0].value.as_bytes().to_vec());
     for seq in 0..n {
         if seq == center_string { continue };
         let mut i:usize = 0;
         let mut j:usize = 0;
         let mut new_row = Vec::new();
-        let center_seq = adjacency_matrix[center_string][seq].sequences[0].sequence.as_bytes().to_vec();
-        let c_seq =      adjacency_matrix[seq][center_string].sequences[0].sequence.as_bytes().to_vec();
+        let center_seq = adjacency_matrix[center_string][seq].sequences[0].value.as_bytes().to_vec();
+        let c_seq =      adjacency_matrix[seq][center_string].sequences[0].value.as_bytes().to_vec();
         while i < matrix[0].len() && j < center_seq.len() {
 
             // Case 1:

@@ -19,11 +19,11 @@ mod tests {
 
         assert_eq!(3, result.len());
         assert_eq!("s1", result[0].name);
-        assert_eq!("AA", result[0].sequence);
+        assert_eq!("AA", result[0].value);
         assert_eq!("s2", result[1].name);
-        assert_eq!("BBB", result[1].sequence);
+        assert_eq!("BBB", result[1].value);
         assert_eq!("s3", result[2].name);
-        assert_eq!("CCCC", result[2].sequence);
+        assert_eq!("CCCC", result[2].value);
     }
 
     #[test]
@@ -35,10 +35,10 @@ mod tests {
 
         assert_eq!(3, result.len());
         assert_eq!("s1", result[0].name);
-        assert_eq!("AAAA", result[0].sequence);
+        assert_eq!("AAAA", result[0].value);
         assert_eq!("s2", result[1].name);
-        assert_eq!("BBBBBB", result[1].sequence);
+        assert_eq!("BBBBBB", result[1].value);
         assert_eq!("s3", result[2].name);
-        assert_eq!("CCCCCCCC", result[2].sequence);
+        assert_eq!("CCCCCCCC", result[2].value);
     }
 }
