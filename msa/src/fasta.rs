@@ -1,4 +1,4 @@
-use std::sync::atomic;
+use rand::distributions::{Alphanumeric, DistString};
 use std::{fs::File, cmp::Ordering};
 use std::io::Read;
 
@@ -32,6 +32,13 @@ impl Sequence {
         return Sequence {
             name,
             value
+        }
+    }
+    
+    pub fn new_random(name_length: usize, value_length: usize) -> Sequence {
+        return Sequence {
+            name: Alphanumeric.sample_string(&mut rand::thread_rng(), name_length),
+            value: Alphanumeric.sample_string(&mut rand::thread_rng(), value_length)
         }
     }
 }
