@@ -7,7 +7,7 @@ mod alignment;
 use clap::{Parser, Subcommand};
 use alignment::gusfield_msa;
 use fasta::read_fasta_file;
-use utils::read_submatrix_file;
+use utils::{read_submatrix_file,map_seq_name_to_id};
 
 /// Multiple sequence alignment using minimum spanning trees
 #[derive(Parser)]
@@ -77,7 +77,8 @@ fn main() {
             for record in &records {
                 println!("{}", record);
             }
-            let alignment = gusfield_msa(&records, &sm, *gap_cost, *maximize
+            let seq_id_map = map_seq_name_to_id(&records);
+            let alignment = gusfield_msa(&records, &sm, &seq_id_map, *gap_cost, *maximize
             ).expect("gusfields alignment failed");
             println!("\n{}", alignment);
 

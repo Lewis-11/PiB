@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 
+use crate::fasta::Sequence;
+
 pub fn parse_submatrix_string(
     submatrix_string: String,
 ) -> HashMap<u8, HashMap<u8, i32>> {
@@ -40,6 +42,23 @@ pub fn read_submatrix_file(filename: &str) -> HashMap<u8, HashMap<u8, i32>> {
     file.read_to_string(&mut contents).unwrap();
     contents = contents.trim().to_string();
     return parse_submatrix_string(contents);
+}
+
+pub fn insert_gap_at(matrix: &mut Vec<Vec<u8>>, index: usize) {
+    for row in matrix.iter_mut() {
+        row.insert(index, b'-');
+    }
+}
+
+// Function meant to be used to initially map sequence names to IDs 
+pub fn map_seq_name_to_id(sequences: &Vec<Sequence>) -> HashMap<String, usize> {
+    let mut seq_map = HashMap::new();
+    
+    for i in 0..sequences.len() {
+        seq_map.insert(sequences[i].name.clone(), i);
+    }
+    
+    return seq_map;
 }
 
 #[cfg(test)]

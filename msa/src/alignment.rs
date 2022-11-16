@@ -138,11 +138,12 @@ pub fn pairwise_alignment(
 pub fn gusfield_msa(
     sequences: &Vec<Sequence>,
     sub_matrix: &HashMap<u8, HashMap<u8, i32>>,
+    seq_id_map: &HashMap<String, usize>,
     gap_cost: i32,
     maximize: bool
 ) -> Option<Alignment> {
     let adjacency_matrix =
-        alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
+        alignment_adjacency_matrix(sequences, sub_matrix, seq_id_map, gap_cost, maximize)?;
     let alignment_matrix =
         gusfield_alignment(&adjacency_matrix);
     return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);

@@ -20,11 +20,10 @@ impl AdjacencyMatrix {
     pub fn linear_index(i: usize, j: usize, n: usize) -> usize {
         let primary_idx = i.min(j);
         let secondary_idx = i.max(j);
-        return (2*n+1-primary_idx)*primary_idx/2 + secondary_idx-primary_idx;
+        return (2 * n + 1 - primary_idx) * primary_idx / 2 + secondary_idx - primary_idx;
     }
     
     pub fn get_linear_index(&self, i: usize, j: usize) -> usize {
-        // return (self.size * (self.size - 1) / 2) - (self.size - i) * ((self.size - i) - 1) / 2 + j - i - 1;
         return AdjacencyMatrix::linear_index(i, j, self.size);
     }
     
