@@ -5,7 +5,6 @@ mod gusfields;
 mod alignment;
 
 use clap::{Parser, Subcommand};
-use alignment::gusfield_msa;
 use fasta::read_fasta_file;
 use utils::read_submatrix_file;
 
@@ -71,15 +70,15 @@ fn main() {
                 "we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}",
                 records, submat, maximize
             );
-            let sm = read_submatrix_file(submat);
-            let records = read_fasta_file(records);
-            println!("Sequences to align:");
-            for record in &records {
-                println!("{}", record);
-            }
-            let alignment = gusfield_msa(&records, &sm, *gap_cost, *maximize
-            ).expect("gusfields alignment failed");
-            println!("\n{}", alignment);
+            //let sm = read_submatrix_file(submat);
+            //let records = read_fasta_file(records);
+            //println!("Sequences to align:");
+            //for record in &records {
+            //    println!("{}", record);
+            //}
+            //let alignment = gusfield_msa(&records, &sm, *gap_cost, *maximize
+            //).expect("gusfields alignment failed");
+            //println!("\n{}", alignment);
 
         }
         Commands::Mst {
