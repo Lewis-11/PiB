@@ -26,11 +26,81 @@ fn insert_gap_at(matrix: &mut Vec<Vec<u8>>, index: usize) {
     }
 }
 
-pub fn merge_clusters(str1: &String, str1_pair: &String, str2_pair: &String) -> Vec<i32> {
+pub fn merge_clusters(cl1_representative: Vec<u8>, cl2_representative: Vec<u8>, pairwise1: Vec<u8>, pairwise2: Vec<u8>) -> Vec<i32> {
+    // merge cluster 1 and cluster2.
+    // index1 is the index of the representative sequence of cluster1
+    // index2 is the index of the representative sequence of cluster2
+    // pairwise1 and pairwise2 are the pairwise alignments between the representative sequences of cluster1 and cluster2
+    let pairwise_length = pairwise1.len();
+
+    let mut i = 0; // index of the representative sequence in cluster1
+    let mut j = 0; // index of the representative sequence in cluster2
+    let mut k = 0; // index of pairwise
+
     let mut instructions: Vec<i32> = Vec::new();
-    let str1: Vec<u8> = str1.as_bytes().to_vec();
-    let str1_pair: Vec<u8> = str1_pair.as_bytes().to_vec();
-    let str2_pair: Vec<u8> = str2_pair.as_bytes().to_vec();
+
+    while i < cl1_representative.len() && j < cl2_representative.len() && k < pairwise_length {
+        if cl1_representative[i] == pairwise1[k] {
+            if cl2_representative[j] == pairwise2[k] {
+                instructions.push(0);
+                i += 1;
+                j += 1;
+                k += 1;
+            } else if cl2_representative[j] == b'-' && pairwise2[k] != b'-' {
+                instructions.push(1);
+                j += 1;
+            } else if cl2_representative[j] != b'-' && pairwise2[k] == b'-' {
+                instructions.push(2);
+                i += 1;
+                k += 1;
+            }
+        } else if cl1_representative[i] == b'-' && pairwise1[k] != b'-' {
+            if cl2_representative[j] == pairwise2[k] {
+                instructions.push(3);
+                i += 1;
+            } else if cl2_representative[j] == b'-' && pairwise2[k] != b'-' {
+                instructions.push(4);
+                i += 1;
+                j += 1;
+            } else if cl2_representative[j] != b'-' && pairwise2[k] == b'-' {
+                instructions.push(3);
+                i += 1;
+            }
+        }
+        else if cl1_representative[i] != b'-' && pairwise1[k] == b'-' {
+            if cl2_representative[j] == pairwise2[k] {
+                instructions.push(5);
+                j += 1;
+                k += 1;
+            } else if cl2_representative[j] == b'-' && pairwise2[k] != b'-' {
+                instructions.push(1);
+                j += 1;
+            } else if cl2_representative[j] != b'-' && pairwise2[k] == b'-' {
+                instructions.push(6);
+                k += 1;
+            }
+        }
+    }
+
+    while i < cl1_representative.len() {
+        instructions.push(3);
+        i += 1;
+    }
+
+    while j < cl2_representative.len() {
+        instructions.push(1);
+        j += 1;
+    }
+    return instructions;
+}
+
+
+
+    pub fn merge_clusters_last(str1: &String, str1_pair: &String, str2_pair: &String) -> Vec<i32> {
+    let mut instructions: Vec<i32> = Vec::new();
+    let str1: Vec<u8> = str1.as_bytes().to_vec(); // representative string of cluster 1
+    let str1_pair: Vec<u8> = str1_pair.as_bytes().to_vec(); // pairwise alignment of string 1 with respect to string 2
+    let str2_pair: Vec<u8> = str2_pair.as_bytes().to_vec(); // pairwise alignment of string 2 with respect to string 1
     let mut i = 0;
     let mut j = 0;
 
@@ -38,7 +108,7 @@ pub fn merge_clusters(str1: &String, str1_pair: &String, str2_pair: &String) -> 
 
         // Case 1:
         if str1[i] == str2_pair[j] {
-            // add chars str1[i] and str2_pair[j] to result
+            //
             instructions.push(1);
             i += 1;
             j += 1;

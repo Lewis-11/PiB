@@ -58,8 +58,9 @@ pub fn wasm_gusfield_mst(score_matrix: String) -> JsValue {
  * @returns {Vec<<i32>} list of integers representing instructions for merging (1, 2 or 3)
  */
 #[wasm_bindgen]
-pub fn wasm_merge_instructions(str1: String, str1_pair: String, str2_pair: String) -> JsValue {
-    let instructions: Vec<i32> = gusfields::merge_clusters(&str1, &str1_pair, &str2_pair);
+pub fn wasm_merge_instructions(str1: String, str2: String, str1_pair: String, str2_pair: String) -> JsValue {
+    // send parameters as arguments but instead of Strings they are Vec<u8>
+    let instructions: Vec<i32> = gusfields::merge_clusters(Vec::from(str1), Vec::from(str2), Vec::from(str1_pair), Vec::from(str2_pair));
     return serde_wasm_bindgen::to_value(&instructions).unwrap_or(JsValue::NULL);
 }
 
