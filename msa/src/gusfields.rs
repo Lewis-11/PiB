@@ -26,6 +26,45 @@ fn insert_gap_at(matrix: &mut Vec<Vec<u8>>, index: usize) {
     }
 }
 
+fn sort_edges(adjacency_matrix: &Vec<Vec<i32>>, maximize: bool) -> Option<Vec<(usize, usize)>> {
+    let n = adjacency_matrix.len();
+    if n == 0 {
+        return None;
+    }
+    let mut edges = Vec::new();
+    for i in 0..n {
+        for j in i+1..n {
+            edges.push((i, j));
+        }
+    }
+    edges.sort_by(|&(i, j), &(k, l)| {
+        if maximize {
+            adjacency_matrix[k][l].cmp(&adjacency_matrix[i][j])
+        } else {
+            adjacency_matrix[i][j].cmp(&adjacency_matrix[k][l])
+        }
+    });
+    return Some(edges);
+}
+
+fn find_set(i: usize, parents: &Vec<usize>) -> usize {
+    if parents[i] == i {
+        return i;
+    }
+    return find_set(parents[i], parents);
+}
+
+fn union_sets(x:usize, y:usize, parents: &mut Vec<usize>, ranks: &mut Vec<usize>) {
+    if ranks[x] < ranks[y] {
+        parents[x] = y;
+    } else if ranks[x] > ranks[y] {
+        parents[y] = x;
+    } else {
+        parents[y] = x;
+        ranks[x] += 1;
+    }
+}
+
 pub fn merge_clusters(cl1_representative: Vec<u8>, cl2_representative: Vec<u8>, pairwise1: Vec<u8>, pairwise2: Vec<u8>) -> Vec<i32> {
     // merge cluster 1 and cluster2.
     // index1 is the index of the representative sequence of cluster1
@@ -148,5 +187,28 @@ pub fn gusfield_mst(score_matrix: &Vec<Vec<i32>>) -> Vec<Vec<i32>> {
         merge_order.push(vec![center_string as i32, i as i32]);
     }
     return merge_order;
+}
+
+pub(crate) fn kruskal_mst(adjacency_matrix: &Vec<Vec<i32>>) -> Option<Vec<Vec<i32>>> {
+    let edges = sort_edges(adjacency_matrix, false).expect("[!] Kruskal error: Could not sort edges");
+    let n = adjacency_matrix.len();
+
+    let mut parents = (0..n).collect::<Vec<usize>>();
+    let mut ranks = vec![0; n];
+
+    let mut tree = Vec::new();
+
+    for (i, j) in edges {
+        let x = find_set(i, &parents);
+        let y = find_set(j, &parents);
+        if x != y {
+            union_sets(x, y, &mut parents, &mut ranks);
+            tree.push(vec![i as i32, j as i32]);
+        }
+        if tree.len() == n-1 {
+            break;
+        }
+    }
+    return Some(tree);
 }
 

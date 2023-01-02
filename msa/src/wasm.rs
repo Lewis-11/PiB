@@ -52,6 +52,19 @@ pub fn wasm_gusfield_mst(score_matrix: String) -> JsValue {
 }
 
 /**
+ * @param {Vec<Vec<i32>>} score_matrix
+ * @returns {Vec<Vec<i32>>} merges list containing pairs of indices to merge
+ */
+#[wasm_bindgen]
+pub fn wasm_kruskal_mst(score_matrix: String) -> JsValue {
+    let score_matrix: Vec<Vec<i32>> = serde_json::from_str(&score_matrix).unwrap();
+    let merges = gusfields::kruskal_mst(&score_matrix).unwrap();
+    serde_wasm_bindgen::to_value(&merges).unwrap_or(JsValue::NULL)
+}
+
+
+
+/**
  * @param {String} str1: string from first cluster that is being merged
  * @param {String} str_pair2: pairwise alignment from second cluster that is being merged
  * @param {String} str_pair1: pairwise alignment from first cluster that is being merged
