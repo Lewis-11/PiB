@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::Read;
 
 pub fn parse_submatrix_string(
-    submatrix_string: String,
+    submatrix_string: &String,
 ) -> HashMap<u8, HashMap<u8, i32>> {
     let mut submatrix = HashMap::new();
     let mut lines = submatrix_string.lines();
@@ -34,12 +34,12 @@ pub fn parse_submatrix_string(
 
 // Parse submatrix indicating cost of subtitution for each pair of characters.
 // Returns a hashmap of the form: [char1][char2] -> cost.
-pub fn read_submatrix_file(filename: &str) -> HashMap<u8, HashMap<u8, i32>> {
+pub fn read_submatrix_file(filename: &str) -> String {
     let mut file = File::open(filename).expect("[!] Error parsing submatrix file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
     contents = contents.trim().to_string();
-    return parse_submatrix_string(contents);
+    return contents;
 }
 
 #[cfg(test)]
