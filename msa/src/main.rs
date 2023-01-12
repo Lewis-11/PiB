@@ -7,6 +7,9 @@ mod alignment;
 use clap::{Parser, Subcommand};
 use fasta::read_fasta_file;
 use utils::read_submatrix_file;
+use crate::adjacency_matrix::get_alignment_cost;
+use crate::alignment::msa;
+use crate::utils::parse_submatrix_string;
 
 /// Multiple sequence alignment using minimum spanning trees
 #[derive(Parser)]
@@ -70,15 +73,35 @@ fn main() {
                 "we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}",
                 records, submat, maximize
             );
-            let sm = read_submatrix_file(submat);
+            let sm_content = read_submatrix_file(submat);
             let records = read_fasta_file(records);
-            //println!("Sequences to align:");
-            for record in &records {
+            let original_sequences = fasta::parse_fasta_string(&records);
+            for record in &original_sequences {
                 println!("{}", record);
             }
-            //let alignment = gusfield_msa(&records, &sm, *gap_cost, *maximize);
-            //).expect("gusfields alignment failed");
-            //println!("\n{}", alignment);
+            let output = msa(
+                &sm_content,
+                *gap_cost,
+                *maximize,
+                &records,
+                &"kruskal".to_string()).unwrap();
+            let steps = output.0;
+            let score = output.1;
+            for step in &steps {
+                let mut idx = 1;
+                for cluster in step {
+                    println!("cl{}:", idx);
+                    for seq in cluster {
+                        // convert Vec<u8> to str
+                        let str1 = std::str::from_utf8(&seq).unwrap();
+                        println!("{}", str1);
+                    }
+                    idx += 1;
+                }
+                println!("\n");
+            }
+            println!("cost: {}", score);
+
 
         }
         Commands::Mst {

@@ -72,7 +72,7 @@ impl Alignment {
 /**********************************************************************
  * Functions
  */
-pub fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
+pub fn parse_fasta_string(fasta_string: &String) -> Vec<FastaSequence> {
     let mut sequences = Vec::new();
     let mut sequence = FastaSequence::new(String::new(), String::new());
     let mut is_sequence = false;
@@ -104,11 +104,11 @@ pub fn parse_fasta_string(fasta_string: String) -> Vec<FastaSequence> {
 // - skip the description lines tarting with ';'
 // - the name of the sequence starting with '>'
 // - the sequence itself
-pub(crate) fn read_fasta_file(file_name: &str) -> Vec<FastaSequence> {
+pub fn read_fasta_file(file_name: &str) -> String {
     let mut file = File::open(file_name).expect("[!] Error parsing fasta file: file not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
-    return parse_fasta_string(contents);
+    return contents;
 }
 
 #[cfg(test)]

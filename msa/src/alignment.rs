@@ -1,7 +1,10 @@
 use std::cmp::{max, min};
 use std::collections::HashMap;
-use crate::fasta::FastaSequence;
+use crate::adjacency_matrix::{adjacency_matrix_scores, alignment_adjacency_matrix, get_alignment_cost};
+use crate::fasta::{FastaSequence, parse_fasta_string};
 use crate::fasta::Alignment;
+use crate::gusfields::{gusfield_mst, kruskal_mst, merge_clusters};
+use crate::utils::parse_submatrix_string;
 
 // Function to return the cost of aligning two fasta sequences.
 // The substitution matrix is a hashmap of the form: [char1][char2] -> cost.
@@ -119,11 +122,53 @@ pub fn pairwise_alignment(seq1: &FastaSequence, seq2: &FastaSequence, sub_matrix
     return Some(Alignment::new_pairwise(output1, output2, score));
 }
 
-// pub fn gusfield_msa(sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32, maximize: bool) -> Option<Alignment> {
-//     let adjacency_matrix = alignment_adjacency_matrix(sequences, sub_matrix, gap_cost, maximize)?;
-//     let alignment_matrix = gusfield_alignment(&adjacency_matrix);
-//     return u8_matrix_to_alignment(&alignment_matrix, sequences, sub_matrix, gap_cost);
-// }
+pub fn msa(sub_matrix: &String, gap_cost: i32, maximize: bool, fasta: &String, algorithm: &String) -> Option<(Vec<Vec<Vec<Vec<u8>>>>, i32)> {
+
+    let sm = parse_submatrix_string(sub_matrix);
+    let fasta_sequences = parse_fasta_string(fasta);
+    let adjacency_matrix = alignment_adjacency_matrix(&fasta_sequences, &sm, gap_cost, maximize).expect("Error creating adjacency matrix");
+    let adjacency_matrix_scores = adjacency_matrix_scores(&adjacency_matrix);
+
+    let guide_tree = match algorithm.as_str() {
+        "gusfield" => gusfield_mst(&adjacency_matrix_scores),
+        "kruskal" => kruskal_mst(&adjacency_matrix_scores),
+        _ => None
+    }.expect("Error creating mst");
+
+    let mut clusters: Vec<Vec<Vec<u8>>> = Vec::new();
+    let mut lookup: Vec<(i32, i32)> = Vec::new();
+    for i in 0..fasta_sequences.len() {
+        clusters.push(vec![fasta_sequences[i].sequence.as_bytes().to_vec(); 1]);
+        lookup.push((i as i32, 0));
+    }
+
+    let mut merge_steps: Vec<Vec<Vec<Vec<u8>>>> = Vec::new();
+
+    // Iterate through the guide tree (vector of tuples f size 2) assigning each of them to a different variable
+    for (orig, dest) in guide_tree {
+        let (orig_cluster, orig_index) = lookup[orig as usize];
+        let (dest_cluster, dest_index) = lookup[dest as usize];
+        let orig_cluster_len = clusters[orig_cluster as usize].len() as i32;
+        let pairwise1 = &adjacency_matrix[orig as usize][dest as usize].sequences[0].sequence;
+        let pairwise2 = &adjacency_matrix[orig as usize][dest as usize].sequences[1].sequence;
+        let cl3 = merge_clusters(
+            &clusters[orig_cluster as usize],
+            &clusters[dest_cluster as usize],
+            orig_index,
+            dest_index,
+            pairwise1.as_bytes().to_vec(),
+            pairwise2.as_bytes().to_vec()
+        ).expect("Error merging clusters");
+        let step = vec![clusters[orig_cluster as usize].clone(), clusters[dest_cluster as usize].clone(), cl3.clone()];
+        clusters[orig_cluster as usize] = cl3.clone();
+        lookup[orig as usize] = (orig_cluster, orig_index);
+        lookup[dest as usize] = (orig_cluster, orig_cluster_len + dest_index);
+        merge_steps.push(step);
+    }
+    let last_step_last_cluster = merge_steps.last().unwrap().last().unwrap();
+    let score = get_alignment_cost(last_step_last_cluster, &sm, gap_cost);
+    return Some((merge_steps, score));
+}
 
 #[cfg(test)]
 #[path ="./tests/alignment.rs"]

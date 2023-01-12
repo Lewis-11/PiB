@@ -18,6 +18,17 @@ pub fn alignment_adjacency_matrix(sequences: &Vec<FastaSequence>, sub_matrix: &H
     return Some(adjacency_matrix);
 }
 
+pub fn adjacency_matrix_scores(alignment_matrix: &Vec<Vec<Alignment>>) -> Vec<Vec<i32>> {
+    let n = alignment_matrix.len();
+    let mut score_matrix = vec![vec![0; n]; n];
+    for i in 0..n {
+        for j in 0..n {
+            score_matrix[i][j] = alignment_matrix[i][j].score;
+        }
+    }
+    return score_matrix;
+}
+
 pub fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<Alignment> {
     let score = get_alignment_cost(matrix, sub_matrix, gap_cost);
     let mut output = Alignment::new(Vec::new(), score);
@@ -31,7 +42,7 @@ pub fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<FastaSequen
     Some(output)
 }
 
-fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> i32{
+pub fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> i32{
     let n_rows = matrix.len();
     let n_cols = matrix[0].len();
     let mut cost = 0;
