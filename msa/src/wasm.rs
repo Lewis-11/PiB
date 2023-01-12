@@ -73,7 +73,7 @@ pub fn msa_wasm(fasta: String, substitution_matrix: String, gap_cost: i32, algor
     for step in steps {
         for cluster in step {
             for seq in cluster {
-                js_output = js_output + std::str::from_utf8(&seq).unwrap();
+                js_output = js_output + std::str::from_utf8(&seq).unwrap() + "&";
             }
             // remove last &
             js_output.pop();
