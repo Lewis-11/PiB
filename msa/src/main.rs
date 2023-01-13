@@ -7,9 +7,7 @@ mod alignment;
 use clap::{Parser, Subcommand};
 use fasta::read_fasta_file;
 use utils::read_submatrix_file;
-use crate::adjacency_matrix::get_alignment_cost;
 use crate::alignment::msa;
-use crate::utils::parse_submatrix_string;
 
 /// Multiple sequence alignment using minimum spanning trees
 #[derive(Parser)]

@@ -1,10 +1,6 @@
-use std::collections::HashMap;
-use fasta::parse_fasta_string;
-use utils::parse_submatrix_string;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
 use crate::alignment::msa;
-use crate::fasta::Alignment;
 
 mod fasta;
 mod utils;
