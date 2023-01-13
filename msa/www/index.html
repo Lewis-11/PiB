@@ -46,7 +46,7 @@
     </nav>
     <noscript>Our website contains WebAssembly and JavaScript content, please enable JavaScript in your browser :)</noscript>
     <script src="./bootstrap.js"></script>
-    <div>
+    <div id="canvas-container">
       <canvas id="display-canvas"></canvas>
     </div>
     <div id="main-container" class="container">
@@ -64,20 +64,14 @@
           </div>
         </div>
         <div class="level-item has-text-centered">
-          <div id="button-ff" class="is-clickable">
-            <p class="heading">Fast-Forward</p>
-            <em class="title fa-solid fa-forward-fast"></em>
-          </div>
-        </div>
-        <div class="level-item has-text-centered">
-          <div id="button-pause" class="is-clickable">
-            <p class="heading">Pause</p>
+          <div id="button-toggle" class="is-clickable">
+            <p class="heading">Toggle</p>
             <em class="title fa-solid fa-pause"></em>
           </div>
         </div>
         <div class="level-item has-text-centered">
-          <div id="button-stop" class="is-clickable">
-            <p class="heading">Stop</p>
+          <div id="button-reset" class="is-clickable">
+            <p class="heading">Reset</p>
             <em class="title fa-solid fa-stop"></em>
           </div>
         </div>
@@ -145,7 +139,7 @@
             <div class="select">
               <select id="field-maximize">
                 <option value="false" selected>Minimize</option>
-                <option value="true">Maximize</option>
+                <option value="true" disabled>Maximize</option>
               </select>
             </div>
           </div>
@@ -153,15 +147,14 @@
             <label class="label">Algorithm</label>
             <div class="select">
               <select id="field-algorithm">
-                <option selected>Gusfield</option>
-                <option>Gusfield + Kruskal</option>
-                <option>Gusfield + Prism</option>
+                <option selected value="gusfield">Gusfield</option>
+                <option value="kruskal">Gusfield + Kruskal</option>
               </select>
             </div>
           </div>
           <div class="control">
             <label class="label">Step interval</label>
-            <input id="field-step-interval" class="input" type="number" placeholder="0.5" value="0.5">
+            <input id="field-step-interval" class="input" type="number" placeholder="1000" value="1000" step="1">
             <p class="help">Seconds between UI updates.</p>
           </div>
         </div>
