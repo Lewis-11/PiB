@@ -1,5 +1,5 @@
 mod tests {
-    use crate::gusfields::{get_center_string, sort_edges};
+    use crate::{gusfields::{get_center_string, sort_edges, merge_clusters}};
 
     #[test]
     fn minimizing_center_string() {
@@ -61,5 +61,53 @@ mod tests {
         assert_eq!(sorted_edges[2], (0, 2));
         assert_eq!(sorted_edges[1], (2, 3));
         assert_eq!(sorted_edges[0], (1, 3));
+    }
+    
+    #[test]
+    fn cluster_merges_symmetrical_property() {
+
+        let cluster_1_1: Vec<Vec<u8>> = [
+            "GATCATCGGT".as_bytes().to_vec(),
+        ].to_vec();
+
+        let cluster_1_2: Vec<Vec<u8>> = [
+            "GAATTCT-TTA".as_bytes().to_vec(),
+            "GAATTCTCTT-".as_bytes().to_vec(),
+        ].to_vec();
+
+        let result_1 = merge_clusters(
+            &cluster_1_1,
+            &cluster_1_2,
+            0,
+            1,
+            "G-A-TCATCGG-T".as_bytes().to_vec(),
+            "GAATTC-TC--TT".as_bytes().to_vec()
+        ).unwrap();
+
+        let cluster_2_1: Vec<Vec<u8>> = [
+            "GAATTCTCTT-".as_bytes().to_vec(),
+            "GAATTCT-TTA".as_bytes().to_vec(),
+        ].to_vec();
+
+        let cluster_2_2: Vec<Vec<u8>> = [
+            "GATCATCGGT".as_bytes().to_vec(),
+        ].to_vec();
+        
+        let result_2 = merge_clusters(
+            &cluster_2_1,
+            &cluster_2_2,
+            0,
+            0,
+            "GAATTC-TC--TT".as_bytes().to_vec(),
+            "G-A-TCATCGG-T".as_bytes().to_vec()
+        ).unwrap();
+        
+        assert_eq!(result_1.len(), result_2.len());
+        assert_eq!(result_1[0].len(), result_2[0].len());
+        
+        assert_eq!(result_1[0], result_2[2]);
+        assert_eq!(result_1[1], result_2[1]);
+        assert_eq!(result_1[2], result_2[0]);
+        
     }
 }
