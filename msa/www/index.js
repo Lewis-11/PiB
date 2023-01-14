@@ -132,6 +132,7 @@ import "./relativeplugin";
 	 * Visualization
 	 */
 	async function visualization() {
+		
 		let fastaString;
 		let costmatrixString;
 		let gapCost = fieldGapCost.value;
@@ -151,6 +152,8 @@ import "./relativeplugin";
 		} else {
 			costmatrixString = fieldCostMatrix.value;
 		}
+		
+		stage.removeAllChildren();
 		
 		let result = msa.msa_wasm(fastaString, costmatrixString, gapCost, algorithm)
 		let parsedResult = clusterStepParser(result)
