@@ -1,6 +1,75 @@
 mod tests {
     use std::str::FromStr;
-    use crate::{utils::parse_submatrix_string, adjacency_matrix::get_alignment_cost};
+    use crate::{utils::parse_submatrix_string, adjacency_matrix::{get_alignment_cost, AdjacencyMatrix}, fasta::{FastaSequence, Alignment}};
+    
+    const MIN_BOUND: usize = 2;
+    const MAX_BOUND: usize = 50;
+
+    #[test]
+    fn check_mirrored_data() {
+
+        for n in MIN_BOUND..MAX_BOUND {
+            let mut adjacency_matrix = AdjacencyMatrix::new(n);
+            
+            // Insert all multiple fake aligments to the matrix 
+            for i in 0..adjacency_matrix.size {
+
+                let new_seq_1 = FastaSequence::new(String::from("NAME1"), String::from("SEQUENCE1"));
+                let new_seq_2 = FastaSequence::new(String::from("NAME1"), String::from("SEQUENCE1"));
+                let new_score: i32 = (i * adjacency_matrix.size + i) as i32;
+                let alignment = Alignment::new([new_seq_1, new_seq_2].to_vec(), new_score);
+                adjacency_matrix.set(i, i, alignment);
+
+                for j in i+1..adjacency_matrix.size {
+                    let new_seq_1 = FastaSequence::new(String::from("NAME1"), String::from("SEQUENCE1"));
+                    let new_seq_2 = FastaSequence::new(String::from("NAME2"), String::from("SEQUENCE2"));
+                    let new_score: i32 = (i * adjacency_matrix.size + j) as i32;
+                    let alignment = Alignment::new([new_seq_1, new_seq_2].to_vec(), new_score);
+                    adjacency_matrix.set(i, j, alignment);
+                }
+            }
+            
+            // Check that the matrix is indeed mirrored 
+            for i in 0..n {
+                for j in 0..n {
+                    assert_eq!(adjacency_matrix.get_score(i, j), adjacency_matrix.get_score(j, i));
+                    assert_eq!(adjacency_matrix.get_sequence(i, j, 0).sequence, adjacency_matrix.get_sequence(j, i, 1).sequence);
+                    if i < j {
+                        assert_eq!(adjacency_matrix.get_sequence(i, j, 0).sequence, String::from("SEQUENCE1"));
+                        assert_eq!(adjacency_matrix.get_sequence(i, j, 1).sequence, String::from("SEQUENCE2"));
+                    } else if i == j {
+                        assert_eq!(adjacency_matrix.get_sequence(i, j, 0).sequence, String::from("SEQUENCE1"));
+                        assert_eq!(adjacency_matrix.get_sequence(i, j, 1).sequence, String::from("SEQUENCE1"));
+                    } else {
+                        assert_eq!(adjacency_matrix.get_sequence(i, j, 0).sequence, String::from("SEQUENCE2"));
+                        assert_eq!(adjacency_matrix.get_sequence(i, j, 1).sequence, String::from("SEQUENCE1"));
+                    }
+                    assert_eq!(adjacency_matrix.get_sequence(i, j, 1).sequence, adjacency_matrix.get_sequence(j, i, 0).sequence);
+                }
+            }
+        }
+
+    }
+    
+    #[test]
+    fn check_continuous_indeces() {
+        
+        let mut curr_idx;
+        
+        for n in MIN_BOUND..MAX_BOUND {
+            curr_idx = 0;
+            for i in 0..n {
+                for j in i..n {
+                    // Check upper matrix
+                    assert_eq!(curr_idx, AdjacencyMatrix::linear_index(i, j, n));
+                    // Check lower matrix
+                    assert_eq!(curr_idx, AdjacencyMatrix::linear_index(j, i, n));
+                    curr_idx += 1;
+                }
+            }
+        }
+        
+    }
 
 
     #[test]
