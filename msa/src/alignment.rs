@@ -149,8 +149,8 @@ pub fn msa(sub_matrix: &String, gap_cost: i32, maximize: bool, fasta: &String, a
         let (orig_cluster, orig_index) = lookup[orig as usize];
         let (dest_cluster, dest_index) = lookup[dest as usize];
         let orig_cluster_len = clusters[orig_cluster as usize].len() as i32;
-        let pairwise1 = &adjacency_matrix[orig as usize][dest as usize].sequences[0].sequence;
-        let pairwise2 = &adjacency_matrix[orig as usize][dest as usize].sequences[1].sequence;
+        let pairwise1 = &adjacency_matrix.get_sequence(orig as usize, dest as usize, 0).sequence;
+        let pairwise2 = &adjacency_matrix.get_sequence(orig as usize, dest as usize, 1).sequence;
         let cl3 = merge_clusters(
             &clusters[orig_cluster as usize],
             &clusters[dest_cluster as usize],
