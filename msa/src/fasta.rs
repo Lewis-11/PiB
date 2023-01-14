@@ -10,8 +10,8 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct FastaSequence {
-    pub(crate) name: String,
-    pub(crate) sequence: String,
+    pub name: String,
+    pub sequence: String,
 }
 // Function for printing the FastaSequence struct
 impl std::fmt::Display for FastaSequence {

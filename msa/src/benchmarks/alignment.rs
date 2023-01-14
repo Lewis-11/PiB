@@ -1,4 +1,6 @@
+use msa::fasta::parse_fasta_string;
 use msa::fasta::read_fasta_file;
+use msa::utils::parse_submatrix_string;
 use msa::utils::read_submatrix_file;
 use msa::alignment::iterative_pairwise_alignment_cost;
 use msa::alignment::iterative_backtracking;
@@ -6,8 +8,10 @@ use criterion::{BenchmarkId, criterion_group, criterion_main, Criterion};
 
 fn pairwise_alignment_benchmark(c: &mut Criterion) {
     let gap_cost = 5;
-    let records = read_fasta_file("./input/test_short.fasta");
-    let sub_matrix = read_submatrix_file("./input/submat.txt");
+    let fasta_string = read_fasta_file("./input/test_short.fasta");
+    let records = parse_fasta_string(&fasta_string);
+    let submatrix_string = read_submatrix_file("./input/submat.txt");
+    let sub_matrix = parse_submatrix_string(&submatrix_string);
     let mut group = c.benchmark_group("Iterative alignment");
     
     for i in 0..records.len() {
@@ -33,8 +37,10 @@ fn pairwise_alignment_benchmark(c: &mut Criterion) {
 
 fn pairwise_backtracking_benchmark(c: &mut Criterion) {
     let gap_cost = 5;
-    let records = read_fasta_file("./input/test_short.fasta");
-    let sub_matrix = read_submatrix_file("./input/submat.txt");
+    let fasta_string = read_fasta_file("./input/test_short.fasta");
+    let records = parse_fasta_string(&fasta_string);
+    let submatrix_string = read_submatrix_file("./input/submat.txt");
+    let sub_matrix = parse_submatrix_string(&submatrix_string);
     let mut group = c.benchmark_group("Iterative backtracking");
     
     for i in 0..records.len() {

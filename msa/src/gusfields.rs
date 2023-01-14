@@ -187,6 +187,7 @@ pub fn merge_clusters(cl1: &Vec<Vec<u8>>, cl2: &Vec<Vec<u8>>, idx1: i32, idx2: i
         }
         j += 1;
     }
+
     return Some(cl3);
 }
 
