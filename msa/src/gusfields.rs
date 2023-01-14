@@ -2,7 +2,7 @@
 pub fn get_center_string(adjacency_matrix: &Vec<Vec<i32>>, maximize: bool) -> usize {
     let n = adjacency_matrix.len();
     let mut center_string = 0;
-    let mut max_score = 0;
+    let mut max_score = if maximize { i32::MIN } else { i32::MAX };
 
     for i in 0..n {
         let mut score = 0;
@@ -224,3 +224,6 @@ pub fn kruskal_mst(adjacency_matrix: &Vec<Vec<i32>>) -> Option<Vec<(i32, i32)>> 
     return Some(tree);
 }
 
+#[cfg(test)]
+#[path ="./tests/gusfields.rs"]
+mod tests;
