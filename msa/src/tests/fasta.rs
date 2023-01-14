@@ -6,7 +6,7 @@ mod tests {
     #[test]
     fn empty_fasta() {
         let empty_fasta = String::new();
-        let result = parse_fasta_string(empty_fasta);
+        let result = parse_fasta_string(&empty_fasta);
         assert_eq!(0, result.len());
     }
 
@@ -15,7 +15,7 @@ mod tests {
         let singleline_fasta = String::from_str(
             ">s1\nAA\n>s2\nBBB\n>s3\nCCCC"
         ).unwrap();
-        let result = parse_fasta_string(singleline_fasta);
+        let result = parse_fasta_string(&singleline_fasta);
 
         assert_eq!(3, result.len());
         assert_eq!("s1", result[0].name);
@@ -31,7 +31,7 @@ mod tests {
         let multiline_fasta = String::from_str(
             ">s1\nAA\nAA\n>s2\nBBB\nBBB\n>s3\nCCCC\nCCCC"
         ).unwrap();
-        let result = parse_fasta_string(multiline_fasta);
+        let result = parse_fasta_string(&multiline_fasta);
 
         assert_eq!(3, result.len());
         assert_eq!("s1", result[0].name);

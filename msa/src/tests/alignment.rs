@@ -30,7 +30,7 @@ mod tests {
             agacctgagaactaatcttgtcgagccttccattgagggtaatgggaga\
             gaacatcgagtcagaagttattcttgtttacgtagaatcgcctgggtccgc"
         ).unwrap();
-        let result = parse_fasta_string(single_line_fasta);
+        let result = parse_fasta_string(&single_line_fasta);
         let seq1 = &result[0];
         let seq2 = &result[1];
         let seq3 = &result[2];
@@ -39,7 +39,7 @@ mod tests {
         let seq6 = &result[5];
         let seq7 = &result[6];
         let seq8 = &result[7];
-        let sub_matrix = parse_submatrix_string(String::from_str(
+        let sub_matrix = parse_submatrix_string(&String::from_str(
             "A,C,G,T\n0,5,2,5\n5,0,5,2\n2,5,0,5\n5,2,5,0"
         ).unwrap());
 
