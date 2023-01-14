@@ -2,11 +2,11 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
 use crate::alignment::msa;
 
-mod fasta;
-mod utils;
-mod alignment;
-mod adjacency_matrix;
-mod gusfields;
+pub mod fasta;
+pub mod utils;
+pub mod alignment;
+pub mod adjacency_matrix;
+pub mod gusfields;
 
 // #[wasm_bindgen]
 // pub fn wasm_serialize_fasta_string(fasta_string: String) -> JsValue {

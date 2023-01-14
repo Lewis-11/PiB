@@ -29,19 +29,6 @@ pub fn adjacency_matrix_scores(alignment_matrix: &Vec<Vec<Alignment>>) -> Vec<Ve
     return score_matrix;
 }
 
-pub fn u8_matrix_to_alignment(matrix: &Vec<Vec<u8>>, sequences: &Vec<FastaSequence>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> Option<Alignment> {
-    let score = get_alignment_cost(matrix, sub_matrix, gap_cost);
-    let mut output = Alignment::new(Vec::new(), score);
-    let n = matrix.len();
-    for i in 0..n {
-        let str = String::from_utf8(matrix[i].clone()).ok()?;
-        let seq = FastaSequence::new(sequences[i].name.clone(), str);
-        output.sequences.push(seq);
-    }
-
-    Some(output)
-}
-
 pub fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<u8, HashMap<u8, i32>>, gap_cost: i32) -> i32{
     let n_rows = matrix.len();
     let n_cols = matrix[0].len();
