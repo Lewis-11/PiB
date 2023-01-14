@@ -2,7 +2,11 @@
 pub fn get_center_string(adjacency_matrix: &Vec<Vec<i32>>, maximize: bool) -> usize {
     let n = adjacency_matrix.len();
     let mut center_string = 0;
-    let mut max_score = 0;
+    let mut max_score = if maximize {
+        i32::MIN
+    } else {
+        i32::MAX
+    };
 
     for i in 0..n {
         let mut score = 0;
@@ -191,7 +195,7 @@ pub fn merge_clusters(cl1: &Vec<Vec<u8>>, cl2: &Vec<Vec<u8>>, idx1: i32, idx2: i
 }
 
 pub fn gusfield_mst(score_matrix: &Vec<Vec<i32>>) -> Option<Vec<(i32, i32)>> {
-    let center_string = get_center_string(score_matrix, true);
+    let center_string = get_center_string(score_matrix, false);
     let n = score_matrix.len();
     let mut merge_order : Vec<(i32, i32)>= Vec::new();
     for i in 0..n {

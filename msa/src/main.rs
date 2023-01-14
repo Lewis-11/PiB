@@ -28,6 +28,9 @@ enum Commands {
         /// Substitution matrix
         #[clap(short, long, value_parser)]
         submat: String,
+        /// Substitution matrix
+        #[clap(short, long, value_parser)]
+        algo: String,
         /// Should we maximize the cost ?
         #[clap(short, long, value_parser, default_value_t = false)]
         maximize: bool,
@@ -46,6 +49,9 @@ enum Commands {
         /// Substitution matrix
         #[clap(short, long, value_parser)]
         submat: String,
+        /// Substitution matrix
+        #[clap(short, long, value_parser)]
+        algo: String,
         /// Should we maximize the cost ?
         #[clap(short, long, value_parser, default_value_t = false)]
         maximize: bool,
@@ -64,6 +70,7 @@ fn main() {
         Commands::Ref {
             records,
             submat,
+            algo,
             maximize,
             gap_cost,
         } => {
@@ -73,31 +80,14 @@ fn main() {
             );
             let sm_content = read_submatrix_file(submat);
             let records = read_fasta_file(records);
-            let original_sequences = fasta::parse_fasta_string(&records);
-            for record in &original_sequences {
-                println!("{}", record);
-            }
+            //let original_sequences = fasta::parse_fasta_string(&records);
             let output = msa(
                 &sm_content,
                 *gap_cost,
                 *maximize,
                 &records,
-                &"kruskal".to_string()).unwrap();
-            let steps = output.0;
+                algo).unwrap();
             let score = output.1;
-            for step in &steps {
-                let mut idx = 1;
-                for cluster in step {
-                    println!("cl{}:", idx);
-                    for seq in cluster {
-                        // convert Vec<u8> to str
-                        let str1 = std::str::from_utf8(&seq).unwrap();
-                        println!("{}", str1);
-                    }
-                    idx += 1;
-                }
-                println!("\n");
-            }
             println!("cost: {}", score);
 
 
@@ -105,6 +95,7 @@ fn main() {
         Commands::Mst {
             records,
             submat,
+            algo,
             maximize,
             gap_cost,
         } => {

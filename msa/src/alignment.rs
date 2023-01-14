@@ -165,8 +165,8 @@ pub fn msa(sub_matrix: &String, gap_cost: i32, maximize: bool, fasta: &String, a
         lookup[dest as usize] = (orig_cluster, orig_cluster_len + dest_index);
         merge_steps.push(step);
     }
-    let last_step_last_cluster = merge_steps.last().unwrap().last().unwrap();
-    let score = get_alignment_cost(last_step_last_cluster, &sm, gap_cost);
+    let last_step = merge_steps.last().unwrap().last().unwrap();
+    let score = get_alignment_cost(&last_step, &sm, gap_cost);
     return Some((merge_steps, score));
 }
 
