@@ -53,3 +53,7 @@ pub fn get_alignment_cost(matrix: &Vec<Vec<u8>>, sub_matrix: &HashMap<u8, HashMa
     }
     return cost;
 }
+
+#[cfg(test)]
+#[path ="./tests/adjacency_matrix.rs"]
+mod tests;
