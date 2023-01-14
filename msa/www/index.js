@@ -161,6 +161,24 @@ import "./relativeplugin";
 		let alignmentCluster1, alignmentCluster2, alignmentResultingCluster
 		
 		visRunning = true;
+
+		let uiStep = new createjs.Text("Step 1/" + parsedResult.steps.length, "28px Courier", "#000000");
+		uiStep.baseline = "middle"
+		uiStep.textAlign = "center"
+		uiStep.x = canvas.clientWidth * 2 - 200; uiStep.y = canvas.clientHeight * 2 - 100;
+		uiStep.alpha = 0;
+		
+		var rect = new createjs.Shape();
+		rect.graphics.beginFill('white');
+		rect.graphics.drawRoundRectComplex(uiStep.x - 90, uiStep.y - 10, 200, 50, 0.25, 0.25, 0.25, 0.25);
+		rect.graphics.endFill();
+		rect.alpha = 0;
+
+		stage.addChild(rect)
+		stage.addChild(uiStep)
+
+		createjs.Tween.get(uiStep).to({alpha:1}, stepInterval);
+		createjs.Tween.get(rect).to({alpha:1}, stepInterval);
 		
 		for (let idx = 0; idx < parsedResult.steps.length; idx += 1) {
 
@@ -170,6 +188,7 @@ import "./relativeplugin";
 			const curr = parsedResult.steps[idx]
 			
 			// Draw current step
+			uiStep.text = "Step " + (idx+1) + "/" + parsedResult.steps.length;
 			
 			// Compute the font size and (x,y) for each alignemnt.
 			// Big alignments *should* be able to fit.
@@ -260,6 +279,8 @@ import "./relativeplugin";
 		uiScore.alpha = 0;
 		stage.addChild(uiScore)
 		createjs.Tween.get(uiScore).to({alpha:1}, stepInterval);
+		createjs.Tween.get(uiStep).to({alpha:0}, stepInterval);
+		createjs.Tween.get(rect).to({alpha:0}, stepInterval);
 	}
 
 	/**********************************************************************
