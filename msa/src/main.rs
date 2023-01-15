@@ -36,7 +36,7 @@ enum Commands {
         gap_cost: i32,
     },
 
-    /// Gusfield's 2-approximation algorithm using minimum spanning trees
+    /// Gusfield's 2-approximation algorithm using Kruskal's algorithm
     Mst {
         // Some additional args can be added in the future,
         // specific to this subcommand (e.g. the order we choose).
@@ -67,40 +67,25 @@ fn main() {
             maximize,
             gap_cost,
         } => {
-            println!(
-                "we should process the 'ref' subcommand with parameters: {:?},{:?},{:?}",
-                records, submat, maximize
-            );
-            let sm_content = read_submatrix_file(submat);
-            let records = read_fasta_file(records);
-            let original_sequences = fasta::parse_fasta_string(&records);
-            for record in &original_sequences {
-                println!("{}", record);
-            }
+            let sm_string = read_submatrix_file(submat);
+            let fasta_string = read_fasta_file(records);
+
             let output = msa(
-                &sm_content,
+                &sm_string,
                 *gap_cost,
                 *maximize,
-                &records,
-                &"kruskal".to_string()).unwrap();
-            let steps = output.0;
+                &fasta_string,
+                &"gusfield".to_string()).unwrap();
+
+            let result = output.0.last().unwrap().last().unwrap();
             let score = output.1;
-            for step in &steps {
-                let mut idx = 1;
-                for cluster in step {
-                    println!("cl{}:", idx);
-                    for seq in cluster {
-                        // convert Vec<u8> to str
-                        let str1 = std::str::from_utf8(&seq).unwrap();
-                        println!("{}", str1);
-                    }
-                    idx += 1;
-                }
-                println!("\n");
+
+            for seq in result {
+                // convert Vec<u8> to str
+                let row = std::str::from_utf8(&seq).unwrap();
+                println!("{}", row);
             }
-            println!("cost: {}", score);
-
-
+            println!("Cost: {}", score);
         }
         Commands::Mst {
             records,
@@ -108,10 +93,25 @@ fn main() {
             maximize,
             gap_cost,
         } => {
-            println!(
-                "we should process the 'mst' subcommand with parameters: {:?},{:?},{:?},{:?}",
-                records, submat, maximize, gap_cost
-            );
+            let sm_string = read_submatrix_file(submat);
+            let fasta_string = read_fasta_file(records);
+
+            let output = msa(
+                &sm_string,
+                *gap_cost,
+                *maximize,
+                &fasta_string,
+                &"kruskal".to_string()).unwrap();
+
+            let result = output.0.last().unwrap().last().unwrap();
+            let score = output.1;
+
+            for seq in result {
+                // convert Vec<u8> to str
+                let row = std::str::from_utf8(&seq).unwrap();
+                println!("{}", row);
+            }
+            println!("Cost: {}", score);
         }
     }
 }

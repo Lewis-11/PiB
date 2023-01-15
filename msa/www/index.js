@@ -155,7 +155,7 @@ import "./relativeplugin";
 		
 		stage.removeAllChildren();
 		
-		let result = msa.msa_wasm(fastaString, costmatrixString, gapCost, algorithm)
+		let result = msa.msa_wasm(fastaString, costmatrixString, gapCost, maximize, algorithm)
 		let parsedResult = clusterStepParser(result)
 
 		let offScreenXOffset = canvas.clientWidth * window.devicePixelRatio * 2;

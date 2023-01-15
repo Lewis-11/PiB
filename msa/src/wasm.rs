@@ -13,9 +13,9 @@ pub mod gusfields;
  * @returns {Vec<Vec<i32>>} merges list containing pairs of indices to merge
  */
 #[wasm_bindgen]
-pub fn wasm_gusfield_mst(score_matrix: String) -> JsValue {
+pub fn wasm_gusfield_mst(score_matrix: String, maximize: bool) -> JsValue {
     let score_matrix: Vec<Vec<i32>> = serde_json::from_str(&score_matrix).unwrap();
-    let merges = gusfields::gusfield_mst(&score_matrix);
+    let merges = gusfields::gusfield_mst(&score_matrix, maximize);
     serde_wasm_bindgen::to_value(&merges).unwrap_or(JsValue::NULL)
 }
 
@@ -24,16 +24,16 @@ pub fn wasm_gusfield_mst(score_matrix: String) -> JsValue {
  * @returns {Vec<Vec<i32>>} merges list containing pairs of indices to merge
  */
 #[wasm_bindgen]
-pub fn wasm_kruskal_mst(score_matrix: String) -> JsValue {
+pub fn wasm_kruskal_mst(score_matrix: String, maximize: bool) -> JsValue {
     let score_matrix: Vec<Vec<i32>> = serde_json::from_str(&score_matrix).unwrap();
-    let merges = gusfields::kruskal_mst(&score_matrix).unwrap();
+    let merges = gusfields::kruskal_mst(&score_matrix, maximize).unwrap();
     serde_wasm_bindgen::to_value(&merges).unwrap_or(JsValue::NULL)
 }
 
 
 #[wasm_bindgen]
-pub fn msa_wasm(fasta: String, substitution_matrix: String, gap_cost: i32, algorithm: String) -> JsValue {
-    let output: (Vec<Vec<Vec<Vec<u8>>>>, i32) = msa(&substitution_matrix, gap_cost, false, &fasta, &algorithm).unwrap();
+pub fn msa_wasm(fasta: String, substitution_matrix: String, gap_cost: i32, maximize: bool, algorithm: String) -> JsValue {
+    let output: (Vec<Vec<Vec<Vec<u8>>>>, i32) = msa(&substitution_matrix, gap_cost, maximize, &fasta, &algorithm).unwrap();
     let steps: Vec<Vec<Vec<Vec<u8>>>> = output.0;
     let score = output.1;
     let mut js_output: String = String::from("");

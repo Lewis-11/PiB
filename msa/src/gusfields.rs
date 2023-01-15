@@ -191,8 +191,8 @@ pub fn merge_clusters(cl1: &Vec<Vec<u8>>, cl2: &Vec<Vec<u8>>, idx1: i32, idx2: i
     return Some(cl3);
 }
 
-pub fn gusfield_mst(score_matrix: &Vec<Vec<i32>>) -> Option<Vec<(i32, i32)>> {
-    let center_string = get_center_string(score_matrix, true);
+pub fn gusfield_mst(score_matrix: &Vec<Vec<i32>>, maximize: bool) -> Option<Vec<(i32, i32)>> {
+    let center_string = get_center_string(score_matrix, maximize);
     let n = score_matrix.len();
     let mut merge_order : Vec<(i32, i32)>= Vec::new();
     for i in 0..n {
@@ -202,8 +202,8 @@ pub fn gusfield_mst(score_matrix: &Vec<Vec<i32>>) -> Option<Vec<(i32, i32)>> {
     return Some(merge_order);
 }
 
-pub fn kruskal_mst(adjacency_matrix: &Vec<Vec<i32>>) -> Option<Vec<(i32, i32)>> {
-    let edges = sort_edges(adjacency_matrix, false).expect("[!] Kruskal error: Could not sort edges");
+pub fn kruskal_mst(adjacency_matrix: &Vec<Vec<i32>>, maximize: bool) -> Option<Vec<(i32, i32)>> {
+    let edges = sort_edges(adjacency_matrix, maximize).expect("[!] Kruskal error: Could not sort edges");
     let n = adjacency_matrix.len();
 
     let mut parents = (0..n).collect::<Vec<usize>>();

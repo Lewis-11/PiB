@@ -130,8 +130,8 @@ pub fn msa(sub_matrix: &String, gap_cost: i32, maximize: bool, fasta: &String, a
     let adjacency_matrix_scores = adjacency_matrix_scores(&adjacency_matrix);
 
     let guide_tree = match algorithm.as_str() {
-        "gusfield" => gusfield_mst(&adjacency_matrix_scores),
-        "kruskal" => kruskal_mst(&adjacency_matrix_scores),
+        "gusfield" => gusfield_mst(&adjacency_matrix_scores, maximize),
+        "kruskal" => kruskal_mst(&adjacency_matrix_scores, maximize),
         _ => None
     }.expect("Error creating mst");
 
