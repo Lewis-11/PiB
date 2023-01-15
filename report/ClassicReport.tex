@@ -110,7 +110,7 @@ The \textit{sum-of-pairs} score is additive, so the algorithm needs to keep trac
 
 \begin{figure}
     \centering
-    \includegraphics[width=7cm]{report/dp-msa.png}
+    \includegraphics[width=7cm]{dp-msa.png}
     \caption{Optimal path of three sequences in a hyperlattice representation. Image extracted from \url{bioinfo3d.cs.tau.ac.il}.}
     \label{fig:dp-msa}
 \end{figure}
@@ -179,7 +179,7 @@ Both Gusfield's approach and our Minimal Spanning Trees implementation start fro
 This can be understood as calculating every edge of an adjacency matrix of a fully connected graph where every node is a sequence we want to align as we can observe in \textit{Figure \ref{fig:fullyconnected}}.
 
 \begin{figure}[h]
-\includegraphics[width=4cm]{report/fullyconnected.png}
+\includegraphics[width=4cm]{fullyconnected.png}
 \centering
 \caption{Fully connected graph were each node represent a unique sequence}
 \label{fig:fullyconnected}
@@ -201,7 +201,7 @@ In Gusfield's algorithm this guide tree is obtained first by finding the ``cente
 Once the center string has been found, we will connect every other sequence with this center string as we can observe in \textit{Figure \ref{fig:center_string}}.
 
 \begin{figure}[h]
-\includegraphics[width=4cm]{report/gusfields.png}
+\includegraphics[width=4cm]{gusfields.png}
 \centering
 \caption{Tree obtained from joining every sequence to the Center String S1}
 \label{fig:center_string}
@@ -232,7 +232,7 @@ A summary of Kruskal's algorithm to build a MST can be seen in \textit{pseudocod
 \end{algorithm}
 
 \begin{figure}[h]
-\includegraphics[width=4cm]{report/mst2.png}
+\includegraphics[width=4cm]{mst2.png}
 \centering
 \caption{Possible tree shape that can be obtained from Kruskal's algorithm}
 \label{fig:mst_graph}
@@ -321,15 +321,15 @@ Due to the design choices that were made at the initial stages of the project - 
 \begin{figure}%
     \centering
     \subfigure{
-        \includegraphics[width=3cm]{report/anim-align-1.png}
+        \includegraphics[width=3cm]{anim-align-1.png}
     }%
     \qquad
     \subfigure{
-        \includegraphics[width=3cm]{report/anim-align-2.png}
+        \includegraphics[width=3cm]{anim-align-2.png}
     }%
     \qquad
     \subfigure{
-        \includegraphics[width=3cm]{report/anim-align-3.png}
+        \includegraphics[width=3cm]{anim-align-3.png}
     }%
     \caption{Character-based steps animated in our first prototypes.}
     \label{fig:proto}
@@ -343,19 +343,19 @@ Consequently, a simpler approach was taken which involved simply displaying and 
     \centering
     \label{fig:anim-align-final}
     \subfigure{
-        \includegraphics[width=6cm]{report/phase-1.png}
+        \includegraphics[width=6cm]{phase-1.png}
     }%
     
     \\
     
     \subfigure{
-        \includegraphics[width=6cm]{report/phase-2.png}
+        \includegraphics[width=6cm]{phase-2.png}
     }%
     
     \\
     
     \subfigure{
-        \includegraphics[width=6cm]{report/phase-end.png}
+        \includegraphics[width=6cm]{phase-end.png}
     }%
     \caption{Final visualization. As opposed to the initial prototypes, which manipulated individual characters, this only animates and moves clusters.}
     
@@ -364,7 +364,7 @@ Consequently, a simpler approach was taken which involved simply displaying and 
 The website allows the user to configure all of the alignment parameters available in the command line program. Users can both, paste and select files containing sequences and cost matrices as seen in \textit{Figure \ref{fig:webapp}}. Once all of the data has been loaded and parameters have been set, users can click on the "PLAY" button to start the visualization. A slower alternative to the continuous visualization can be triggered by using the "STEP" button, which requires an interaction from the user per step. "TOGGLE" and "RESET" will toggle the on-going animation and remove all images from the canvas respectively.
 
 \begin{figure}[h]
-    \includegraphics[width=0.8\textwidth]{report/webapp.png}
+    \includegraphics[width=0.8\textwidth]{webapp.png}
     \centering
     \caption{Overview of the final website.}
     \label{fig:webapp}
@@ -398,7 +398,7 @@ We have evaluated each of the four implementations with the three data sets ment
 We first compared the score ratio of our implementation of Kruskal's algorithm with Gusfield's score. A lower ratio indicates an improvement in Gusfield's score. We calculated the average score ratio for each test by combining the lengths of the sequences. As shown in \textit{Figure \ref{fig:gusVSkruskal}}, the results were mostly better, with an average ratio of 0.67, which translates to a 33\% improvement. It's important to keep in mind that this comparison is based on our observations and there's yet to be proof that MSTs lead to a higher alignment quality.
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/kruskalVSgudfield.png}
+\includegraphics[width=0.8\textwidth]{kruskalVSgudfield.png}
 \centering
 \caption{Score ratio between Gusfield's "center string" \& Kruskal's MST as guide tree for different sequence lengths.}
 \label{fig:gusVSkruskal}
@@ -407,7 +407,7 @@ We first compared the score ratio of our implementation of Kruskal's algorithm w
 We also evaluated various MST alternatives that modify the order in which sequences are merged following the MST. The standard approach merges sequences with smaller scores (more similar sequences) first, while the reversed version starts with sequences with higher scores (more dissimilar sequences), and the last one is a random order. To determine if these alternatives show an improvement over the standard MST (lower scores first), we calculated a score ratio between the alternatives and the standard MST, as we did before. The results can be seen in \textit{Figure \ref{fig:kruskalVSkruskal}}. 
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/kruskalsVSkruskal.png}
+\includegraphics[width=0.8\textwidth]{kruskalsVSkruskal.png}
 \centering
 \caption{Score ratio between Kruskal's MST alternatives for different sequence lengths.}
 \label{fig:kruskalVSkruskal}
@@ -418,28 +418,28 @@ The average ratio for the inverted order is 1.25 and for the random order is 1.0
 Based on our observations, it is notable that the differences between using Gusfield's star-tree and Kruskal's MST become more apparent when the number of sequences (k) is larger. This can be observed by comparing \textit{Figure \ref{fig:chart-2}}, which shows results for 5 sequences, with \textit{Figure \ref{fig:chart-3}}, which shows results for different sequence lengths. This trend can also be observed in real-world data, such as the comparison of different mouse sequences in \textit{Figure \ref{fig:chart-5}}, which have 5 sequences, versus the results obtained from aligning 9 sequences of COVID variants in \textit{Figure \ref{fig:chart-4}}, where we can see a more significant improvement from Kruskal's alternative when compared to Gusfield's method.
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/chart-2.png}
+\includegraphics[width=0.8\textwidth]{chart-2.png}
 \centering
 \caption{Scores from aligning 5 randomized sequences of multiple sizes.}
 \label{fig:chart-2}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/chart-3.png}
+\includegraphics[width=0.8\textwidth]{chart-3.png}
 \centering
 \caption{Scores from aligning 10 randomized sequences of multiple sizes.}
 \label{fig:chart-3}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/chart-4.png}
+\includegraphics[width=0.8\textwidth]{chart-4.png}
 \centering
 \caption{Scores from aligning 9 SARS-CoV-2 variants.}
 \label{fig:chart-4}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/chart-5.png}
+\includegraphics[width=0.8\textwidth]{chart-5.png}
 \centering
 \caption{Scores from aligning 5 sequences from the \textit{mus musculus} reference genome.}
 \label{fig:chart-5}
@@ -449,7 +449,7 @@ This can be attributed to the fact that an increase in the number of sequences l
 
 
 \begin{figure}[H]
-\includegraphics[width=0.8\textwidth]{report/chart-1.png}
+\includegraphics[width=0.8\textwidth]{chart-1.png}
 \centering
 \caption{Scores from aligning 5 differently-sized sequences from the \textit{mus musculus} reference genome.}
 \label{fig:chart-1}
@@ -458,7 +458,7 @@ This can be attributed to the fact that an increase in the number of sequences l
 As a final note, in \textit{chapter \ref{cha:arch--impl}} we mentioned the increased running time of adding Kruskal's algorithm on top of Gusfield's. \textit{Figure \ref{fig:running-times}} clearly shows that in theory there is some overhead most of the processing is done aligning both sequences and clusters. The base Gusfield implementation and Gusfield + Kruskal implementation offer near identical running times.
 
 \begin{figure}[h]
-\includegraphics[width=0.8\textwidth]{report/runing-times.png}
+\includegraphics[width=0.8\textwidth]{runing-times.png}
 \centering
 \caption{Running times from a series of tests comparing the base Gusfield implementation with the improved one.}
 \label{fig:running-times}
@@ -518,7 +518,7 @@ jobs:
 The web server is set up in a way that allows the viewing of different branches. The idea behind this setup was to make testing as easy as possible. \textit{Figure \ref{fig:ci-branch-index}} shows the index page of the server.
 
 \begin{figure}[h]
-\includegraphics[width=0.8\textwidth]{report/ci-branch-index.png}
+\includegraphics[width=0.8\textwidth]{ci-branch-index.png}
 \centering
 \caption{Root of the custom server used for the development of the solution.}
 \label{fig:ci-branch-index}
@@ -531,7 +531,7 @@ The web server is set up in a way that allows the viewing of different branches.
 Running the \textit{cargo bench} command will run all of the benchmarks defined within the \textit{Cargo.toml} file. The \textit{criterion} library has been used in order to automate most of the prior (e.g. a test warm up) and subsequent (e.g. computing the standard deviation) steps of the benchmarking process. An example of the generated HTML file can be seen in \textit{Figure \ref{fig:criterion}}. Locally, this file is located inside the \textit{./target/criterion/Gusfield MSA alignment/report} folder.
 
 \begin{figure}[h]
-\includegraphics[width=0.8\textwidth]{report/criterion.png}
+\includegraphics[width=0.8\textwidth]{criterion.png}
 \centering
 \caption{Generated output from \textit{criterion}.}
 \label{fig:criterion}
