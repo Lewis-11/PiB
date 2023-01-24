@@ -156,8 +156,8 @@ import "./relativeplugin";
 		let result = msa.msa_wasm(fastaString, costmatrixString, gapCost, maximize, algorithm)
 		let parsedResult = clusterStepParser(result)
 
-		let offScreenXOffset = canvas.clientWidth * window.devicePixelRatio * 2;
-		let offScreenYOffset = canvas.clientHeight * window.devicePixelRatio * 2;
+		let offScreenXOffset = canvas.clientWidth * ratio;
+		let offScreenYOffset = canvas.clientHeight * ratio;
 		
 		let alignmentCluster1, alignmentCluster2, alignmentResultingCluster
 		
@@ -166,7 +166,7 @@ import "./relativeplugin";
 		let uiStep = new createjs.Text("Step 1/" + parsedResult.steps.length, "28px Courier", "#000000");
 		uiStep.baseline = "middle"
 		uiStep.textAlign = "center"
-		uiStep.x = canvas.clientWidth * 2 - 200; uiStep.y = canvas.clientHeight * 2 - 100;
+		uiStep.x = canvas.clientWidth * ratio - 200; uiStep.y = canvas.clientHeight * ratio - 100;
 		uiStep.alpha = 0;
 		
 		var rect = new createjs.Shape();
@@ -195,18 +195,18 @@ import "./relativeplugin";
 			
 			// Compute the font size and (x,y) for each alignemnt.
 			// Big alignments *should* be able to fit.
-			let fontSizeCluster1 = Math.floor(canvas.clientWidth / window.devicePixelRatio * 0.8 / curr[0][0].length) * 8;
-			let fontSizeCluster2 = Math.floor(canvas.clientWidth / window.devicePixelRatio * 0.8 / curr[1][0].length) * 8;
-			let fontSizeResultingCluster = Math.floor(canvas.clientWidth / window.devicePixelRatio * 0.8 / curr[2][0].length) * 8;
+			let fontSizeCluster1 = Math.floor(canvas.clientWidth / ratio * 0.8 / curr[0][0].length) * 4 * ratio;
+			let fontSizeCluster2 = Math.floor(canvas.clientWidth / ratio * 0.8 / curr[1][0].length) * 4 * ratio;
+			let fontSizeResultingCluster = Math.floor(canvas.clientWidth / ratio * 0.8 / curr[2][0].length) * 4 * ratio;
 
 			// Make sure font size isn't too big
-			fontSizeCluster1 = Math.min(32, fontSizeCluster1);
-			fontSizeCluster2 = Math.min(32, fontSizeCluster2);
-			fontSizeResultingCluster = Math.min(32, fontSizeResultingCluster);
+			fontSizeCluster1 = Math.min(16 * ratio, fontSizeCluster1);
+			fontSizeCluster2 = Math.min(16 * ratio, fontSizeCluster2);
+			fontSizeResultingCluster = Math.min(16 * ratio, fontSizeResultingCluster);
 			
-			alignmentCluster1 = {pos: {x: canvas.clientWidth, y: canvas.clientHeight * 0.33 * 2 + offScreenYOffset}, data: curr[0]}
-			alignmentCluster2 = {pos: {x: canvas.clientWidth, y: canvas.clientHeight * 0.66 * 2 + offScreenYOffset}, data: curr[1]}
-			alignmentResultingCluster = {pos: {x: canvas.clientWidth + offScreenXOffset, y: canvas.clientHeight}, data: curr[2]}
+			alignmentCluster1 = {pos: {x: (canvas.clientWidth / 2) * ratio, y: canvas.clientHeight * 0.33 * ratio + offScreenYOffset}, data: curr[0]}
+			alignmentCluster2 = {pos: {x: (canvas.clientWidth / 2) * ratio, y: canvas.clientHeight * 0.66 * ratio + offScreenYOffset}, data: curr[1]}
+			alignmentResultingCluster = {pos: {x: (canvas.clientWidth / 2) * ratio + offScreenXOffset, y: (canvas.clientHeight / 2) * ratio}, data: curr[2]}
 	
 			let uiAlignmentCluster1 = createPerLineUiAlignment(alignmentCluster1, fontSizeCluster1)
 			let uiAlignmentCluster2 = createPerLineUiAlignment(alignmentCluster2, fontSizeCluster2)
@@ -275,10 +275,10 @@ import "./relativeplugin";
 		
 		await sleep(stepInterval)
 
-		let uiScore = new createjs.Text("Score: " + parsedResult.score, "48px Courier", "#FFFFFF");
+		let uiScore = new createjs.Text("Score: " + parsedResult.score, 24 * ratio + "px Courier", "#FFFFFF");
 		uiScore.baseline = "middle"
 		uiScore.textAlign = "center"
-		uiScore.x = offScreenXOffset / 4; uiScore.y = uiAlignmentResultingCluster[uiAlignmentResultingCluster.length - 1].y + 100
+		uiScore.x = offScreenXOffset / 2; uiScore.y = uiAlignmentResultingCluster[uiAlignmentResultingCluster.length - 1].y + 50 * ratio
 		uiScore.alpha = 0;
 		stage.addChild(uiScore)
 		createjs.Tween.get(uiScore).to({alpha:1}, stepInterval);
