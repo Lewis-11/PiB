@@ -25,8 +25,6 @@ import "./relativeplugin";
 	let fieldAlgorithm = document.getElementById("field-algorithm");
 	let fieldMaximize = document.getElementById("field-maximize");
 	let fieldStepInterval = document.getElementById("field-step-interval");
-	let helpFastaFormat = document.getElementById("help-fasta-format");
-	let helpCostMatrixFormat = document.getElementById("help-cost-matrix-format"); 
 	let helpFastaExample = document.getElementById("help-fasta-example");
 	let helpCostMatrixExample = document.getElementById("help-cost-matrix-example");
 	let selectorFasta = document.getElementById("selector-fasta");
@@ -183,6 +181,8 @@ import "./relativeplugin";
 		createjs.Tween.get(uiStep).to({alpha:1}, stepInterval);
 		createjs.Tween.get(rect).to({alpha:1}, stepInterval);
 		
+		let uiAlignmentResultingCluster
+		
 		for (let idx = 0; idx < parsedResult.steps.length; idx += 1) {
 
 			if (requestStop) { stage.removeAllChildren(); break; }
@@ -210,7 +210,7 @@ import "./relativeplugin";
 	
 			let uiAlignmentCluster1 = createPerLineUiAlignment(alignmentCluster1, fontSizeCluster1)
 			let uiAlignmentCluster2 = createPerLineUiAlignment(alignmentCluster2, fontSizeCluster2)
-			let uiAlignmentResultingCluster = createPerLineUiAlignment(alignmentResultingCluster, fontSizeResultingCluster)
+			uiAlignmentResultingCluster = createPerLineUiAlignment(alignmentResultingCluster, fontSizeResultingCluster)
 			
 			alignmentCluster1.pos.y -= offScreenYOffset
 			for (const row of uiAlignmentCluster1) {
@@ -228,14 +228,14 @@ import "./relativeplugin";
 	
 			await sleep(stepInterval)
 	
-			alignmentCluster1.pos.x -= offScreenXOffset
+			alignmentCluster1.pos.x -= offScreenXOffset // + alignmentCluster1.data[0].length * 8
 			for (const row of uiAlignmentCluster1) {
 				while (paused) { await sleep(CONST.PAUSE_SLEEP_TIMEOUT) }
 				createjs.Tween.get(row, { loop: false })
 					.to({ x: "-" + offScreenXOffset }, stepInterval, createjs.Ease.getPowInOut(4))
 			}
 	
-			alignmentCluster2.pos.x -= offScreenXOffset
+			alignmentCluster2.pos.x -= offScreenXOffset // + alignmentCluster2.data[0].length * 8
 			for (const row of uiAlignmentCluster2) {
 				while (paused) { await sleep(CONST.PAUSE_SLEEP_TIMEOUT) }
 				createjs.Tween.get(row, { loop: false })
@@ -278,7 +278,7 @@ import "./relativeplugin";
 		let uiScore = new createjs.Text("Score: " + parsedResult.score, "48px Courier", "#FFFFFF");
 		uiScore.baseline = "middle"
 		uiScore.textAlign = "center"
-		uiScore.x = offScreenXOffset / 4; uiScore.y = alignmentResultingCluster.pos.y + 200;
+		uiScore.x = offScreenXOffset / 4; uiScore.y = uiAlignmentResultingCluster[uiAlignmentResultingCluster.length - 1].y + 100
 		uiScore.alpha = 0;
 		stage.addChild(uiScore)
 		createjs.Tween.get(uiScore).to({alpha:1}, stepInterval);
@@ -439,18 +439,11 @@ import "./relativeplugin";
 	/**********************************************************************
 	 * Help functionality
 	 */
-	helpFastaFormat.onclick = function (_e) {
-		alert("NOT IMPLEMENTED")
-	}
 
 	helpFastaExample.onclick = function (_e) {
 		if (!fieldFasta.disabled) {
 			fieldFasta.value = CONST.FASTA_EXAMPLE_VALUE
 		}
-	}
-
-	helpCostMatrixFormat.onclick = function (_e) {
-		alert("NOT IMPLEMENTED")
 	}
 
 	helpCostMatrixExample.onclick = function (_e) {
