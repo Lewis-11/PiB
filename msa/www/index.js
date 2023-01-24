@@ -156,8 +156,8 @@ import "./relativeplugin";
 		let result = msa.msa_wasm(fastaString, costmatrixString, gapCost, maximize, algorithm)
 		let parsedResult = clusterStepParser(result)
 
-		let offScreenXOffset = canvas.clientWidth * window.devicePixelRatio * ratio;
-		let offScreenYOffset = canvas.clientHeight * window.devicePixelRatio * ratio;
+		let offScreenXOffset = canvas.clientWidth * window.devicePixelRatio * 2;
+		let offScreenYOffset = canvas.clientHeight * window.devicePixelRatio * 2;
 		
 		let alignmentCluster1, alignmentCluster2, alignmentResultingCluster
 		
@@ -166,7 +166,7 @@ import "./relativeplugin";
 		let uiStep = new createjs.Text("Step 1/" + parsedResult.steps.length, "28px Courier", "#000000");
 		uiStep.baseline = "middle"
 		uiStep.textAlign = "center"
-		uiStep.x = canvas.clientWidth * ratio - 200; uiStep.y = canvas.clientHeight * ratio - 100;
+		uiStep.x = canvas.clientWidth * 2 - 200; uiStep.y = canvas.clientHeight * 2 - 100;
 		uiStep.alpha = 0;
 		
 		var rect = new createjs.Shape();
@@ -204,8 +204,8 @@ import "./relativeplugin";
 			fontSizeCluster2 = Math.min(32, fontSizeCluster2);
 			fontSizeResultingCluster = Math.min(32, fontSizeResultingCluster);
 			
-			alignmentCluster1 = {pos: {x: canvas.clientWidth, y: canvas.clientHeight * 0.33 * ratio + offScreenYOffset}, data: curr[0]}
-			alignmentCluster2 = {pos: {x: canvas.clientWidth, y: canvas.clientHeight * 0.66 * ratio + offScreenYOffset}, data: curr[1]}
+			alignmentCluster1 = {pos: {x: canvas.clientWidth, y: canvas.clientHeight * 0.33 * 2 + offScreenYOffset}, data: curr[0]}
+			alignmentCluster2 = {pos: {x: canvas.clientWidth, y: canvas.clientHeight * 0.66 * 2 + offScreenYOffset}, data: curr[1]}
 			alignmentResultingCluster = {pos: {x: canvas.clientWidth + offScreenXOffset, y: canvas.clientHeight}, data: curr[2]}
 	
 			let uiAlignmentCluster1 = createPerLineUiAlignment(alignmentCluster1, fontSizeCluster1)
@@ -278,7 +278,7 @@ import "./relativeplugin";
 		let uiScore = new createjs.Text("Score: " + parsedResult.score, "48px Courier", "#FFFFFF");
 		uiScore.baseline = "middle"
 		uiScore.textAlign = "center"
-		uiScore.x = offScreenXOffset / (2 * ratio); uiScore.y = uiAlignmentResultingCluster[uiAlignmentResultingCluster.length - 1].y + 100
+		uiScore.x = offScreenXOffset / 4; uiScore.y = uiAlignmentResultingCluster[uiAlignmentResultingCluster.length - 1].y + 100
 		uiScore.alpha = 0;
 		stage.addChild(uiScore)
 		createjs.Tween.get(uiScore).to({alpha:1}, stepInterval);
